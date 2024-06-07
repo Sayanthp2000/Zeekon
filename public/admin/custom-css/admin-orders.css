@@ -1,0 +1,47 @@
+
+
+.td-status {
+    width: 100px;
+}
+
+
+#order-status {
+    width: 100%;
+}
+
+
+.image-and-name {
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    padding: 5px;
+}
+
+
+.product-img {
+    width: 50px;
+    height: 50px;
+}
+
+
+/* .td-column {
+    border: 1px solid brown;
+} */
+
+
+
+.order-id {
+    width: 100px;
+}
+
+
+
+.order-status {
+    padding: 5px;
+    background-color: aqua;
+}
+
+
+.order-status:first-child{
+    display: none;
+}

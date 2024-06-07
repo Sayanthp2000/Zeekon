@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeekon</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/asset/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/asset/vendors/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/asset/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="/asset/vendors/font-awesome/css/font-awesome.min.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="/asset/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css">
+    <!-- End plugin css for this page -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/asset/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/asset/images/favicon.png" />
+    <!-- Custom css for this page -->
+    <link rel="stylesheet" href="/admin/custom-css/sales-report.css">
+    <!-- End custom css for this page -->
+    <!-- Custom js for this page -->
+    <script src="/admin/custom-js/sales-report.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <!-- End custom js for this page -->
+
+    <style>
+        body, .container-scroller, .container-fluid, .main-panel, .content-wrapper, .page-header, .card-body, .form-control, .btn, .card-title {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+    </style>
+</head>
+<body>
+    <div class="container-scroller">
+        <!-- Navbar starts here -->
+        <%- include('./layouts/navbar.ejs') %>
+        <!-- Navbar ends here -->
+
+        <div class="container-fluid page-body-wrapper">
+            <!-- Sidebar starts here -->
+            <%- include('./layouts/sidebar.ejs') %>
+            <!-- Sidebar ends here -->
+
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary text-white me-2">
+                                <i class="mdi mdi-chart-bar"></i>
+                            </span> Sales Report
+                        </h3>
+                   
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Summary</h4>
+                                    <div class="sales-report-container">
+                                        <div class="sales-report-box bg-gradient-info text-white p-3 rounded">
+                                            <h5>Today:</h5>
+                                            <p><%= dailyStats.dailyOrderCount %> orders</p>
+                                            <p>Revenue: ₹<%= dailyStats.dailyRevenueAmount %></p>
+                                        </div>
+
+                                        <div class="sales-report-box bg-gradient-success text-white p-3 rounded">
+                                            <h5>This Month:</h5>
+                                            <p><%= monthlyStats.monthlyOrderCount %> orders</p>
+                                            <p>Revenue: ₹<%= monthlyStats.monthlyRevenueAmount %></p>
+                                        </div>
+
+                                        <div class="sales-report-box bg-gradient-warning text-white p-3 rounded">
+                                            <h5>This Year:</h5>
+                                            <p><%= yearlyStats.yearlyOrderCount %> orders</p>
+                                            <p>Revenue: ₹<%= yearlyStats.yearlyRevenueAmount %></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="options-container mt-4">
+                                        <div class="form-inline">
+                                            <div class="form-group mb-2">
+                                                <label for="from-date" class="sr-only">From Date</label>
+                                                <input type="date" class="form-control" id="from-date" name="from-date" placeholder="From Date">
+                                            </div>
+                                            <div class="form-group mx-sm-3 mb-2">
+                                                <label for="to-date" class="sr-only">To Date</label>
+                                                <input type="date" class="form-control" id="to-date" name="to-date" placeholder="To Date">
+                                            </div>
+                                            <div class="form-group mx-sm-3 mb-2">
+                                                <select name="report-type" id="report-type" class="form-control  input-date">
+                                                    <option value="custom">Custom</option>
+                                                    <option value="daily" selected>Daily</option>
+                                                    <option value="monthly">Monthly</option>
+                                                    <option value="yearly">Yearly</option>
+                                                </select>
+                                            </div>
+                                            <button class="btn btn-gradient-primary mb-2 btn-apply" type="button">Apply</button>
+                                        </div>
+
+                                        <div class="download-buttons mt-3">
+                                            <button id="generate-pdf" class="btn btn-gradient-danger">Download as PDF</button>
+                                            <button id="generate-excel" class="btn btn-gradient-info">Download as Excel</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="sales-report-div">
+                                        <div>
+                                            <div><span>Orders : <b><span class="noOfOrders"></span></b></span></div>
+                                            <div><span>Revenue : <b><span class="revenueAmount"></span></b></span></div>
+                                        </div>
+                                        <div>
+                                            <span>Number of Users : <b><span class="noOfUsers"></span></b></span>
+                                        </div>
+                                        <div class="top-products-sale">
+                                            <h3>Top Products Sale</h3>
+                                        </div>
+                                        <div class="top-categories-sale">
+                                            <h3>Top Category Sale</h3>
+                                        </div>
+                                        <div class="payment-options">
+                                            <h3>Chosen Payment Option</h3>
+                                        </div>
+                                        <div class="order-status">
+                                            <h3>Order Status Summary</h3>
+                                        </div>
+                                    </div>
+
+                                    
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="/asset/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="/asset/vendors/chart.js/chart.umd.js"></script>
+    <script src="/asset/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="/asset/js/off-canvas.js"></script>
+    <script src="/asset/js/misc.js"></script>
+    <script src="/asset/js/settings.js"></script>
+    <script src="/asset/js/todolist.js"></script>
+    <script src="/asset/js/jquery.cookie.js"></script>
+    <!-- endinject -->
+</body>
+</html>

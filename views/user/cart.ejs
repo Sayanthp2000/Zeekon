@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<%- include('./layouts/head.ejs') %>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+	<!-- SweetAlert2 CSS -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
+
+</head>
+
+<body>
+    <div class="page-wrapper">
+
+
+        <%- include('./layouts/header-2.ejs') %>
+
+
+
+        <main class="main">
+        	
+            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/product-list">Shop</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+            	<div class="cart">
+	                <div class="container">
+
+						<% if(cartProducts.cart.length > 0 ){ %>
+
+
+	                	<div class="row">
+	                		<div class="col-lg-9">
+	                			<table class="table table-cart table-mobile">
+									<thead>
+										<tr>
+											<th>Product</th>
+											<th>Price</th>
+											<th>Quantity</th>
+											<th>Total</th>
+											<th></th>
+										</tr>
+									</thead>
+
+									<tbody>
+
+
+
+										<% cartProducts.cart.forEach( item => { %> 
+										
+											
+											
+										<tr>
+											<td class="product-col">
+												<div class="product">
+													<figure class="product-media">
+														<a href="/product/<%= item.product._id %>">
+															<img src="/products/<%= item.product.images[0] %>" alt="Product image">
+														</a>
+													</figure>
+
+													<h3 class="product-title">
+														<a href="#"><%= item.product.name %></a>
+													</h3><!-- End .product-title -->
+												</div><!-- End .product -->
+											</td>
+											<% if(item.product.quantity > 0) { %>
+												<td class="price-col"> ₹<%= item.product.discountPrice %></td>
+												<td class="quantity-col">
+													<div class="cart-product-quantity">
+														<input type="number" class="form-control quantityInput" value="<%= item.count %>" min="1" max="10" step="1" data-decimals="0" data-product-id="<%= item.product._id %>" data-user-id="<%= cartProducts._id %>" required>
+													</div><!-- End .cart-product-quantity -->
+												</td>
+												<td class="total-col"> ₹<%= item.product.discountPrice * item.count %></td>
+											<%} else{ %>
+												<!-- <td></td> -->
+												<!-- <td></td> -->
+												<td colspan="3"><span class="text-danger font-weight-bold">Out of Stock</span></td>
+											<%} %>
+											
+											<td class="remove-col"><button class="btn-remove" data-product-id="<%= item.product._id %>" ><i class="icon-close"></i></button></td>
+										</tr>
+
+
+
+
+										<% } ) %>
+
+
+
+
+
+										
+									</tbody>
+								</table><!-- End .table table-wishlist -->
+
+	                			<div class="cart-bottom">
+			            			<div class="cart-discount">
+			            				<form action="#">
+			            					<div class="input-group">
+				        						<!-- <input type="text" class="form-control" required placeholder="coupon code"> -->
+				        						<!-- <div class="input-group-append"> -->
+													<!-- <button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button> -->
+												<!-- </div> -->
+												<!-- .End .input-group-append -->
+			        						</div><!-- End .input-group -->
+			            				</form>
+			            			</div><!-- End .cart-discount -->
+
+			            			<!-- <a href="/cart" class="btn btn-outline-dark-2"><span>UPDATE CART</span><i class="icon-refresh"></i></a> -->
+		            			</div><!-- End .cart-bottom -->
+	                		</div><!-- End .col-lg-9 -->
+	                		<aside class="col-lg-3">
+	                			<div class="summary summary-cart">
+	                				<h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+
+	                				<table class="table table-summary">
+	                					<tbody>
+	                						<tr class="summary-subtotal">
+	                							<td>Subtotal:</td>
+
+												<!-- < let totalPrice = 0 %> -->
+												<!-- < cartProducts.cart.forEach( item => { %> -->
+												<!-- < if( item.product.quantity > 0 ){ %> -->
+												<!-- < totalPrice += item.product.price * item.count %> -->
+												<!-- < } %> -->
+												<!-- < }); %> -->
+
+	                							<td> ₹<%= totalPrice %></td>
+	                						</tr><!-- End .summary-subtotal -->
+	                						<tr class="summary-shipping">
+	                							
+	                							<td>&nbsp;</td>
+	                						</tr>
+
+	                						<tr class="summary-shipping-row">
+	                							<td>
+													<div class="custom-control custom-radio">
+														<input checked aria-selected="true" type="radio" id="free-shipping" name="shipping" class="custom-control-input">
+														
+													</div>
+	                							</td>
+	                							
+	                						</tr>
+
+											
+	                						
+											<!-- End .summary-shipping-row -->
+											
+	                						<tr class="summary-shipping-estimate">
+												<td>
+													<!-- Estimate for Your Country<br> -->
+													<a href="/dashboard#add-address">Change address</a></td>
+													<td>&nbsp;</td>
+												</tr>
+												
+												<tr class="summary-shipping">
+													<% if(user.address.length < 0){ %>
+														<td><a href="/dashboard#address"><span class="font-weight-bold">Add Address</span></a></td>
+													<%}else{ %>
+														<td><span class="font-weight-bold">Address :</span></td>
+														<td>&nbsp;</td>
+													<% } %>
+												</tr>
+
+												<form id="address-form">
+
+													<tr class="summary-shipping-row">
+														<td>
+															<div class="custom-control custom-radio">
+																<input type="radio" id="no-address" name="selectedAddress" class="custom-control-input" select-address data-address-id="" >
+																<label class="custom-control-label" for="no-address">
+																	<span class="font-weight-normal" >Add New Address. </span>
+																	 <span class="font-italic" ></span></label>
+															</div><!-- End .custom-control -->
+														</td>
+														<td></td>
+													</tr><!-- End .summary-shipping-row -->
+
+													<% user.address.forEach( ( address, index ) => { %> 
+	
+	
+														<tr class="summary-shipping-row">
+															<td>
+																<div class="custom-control custom-radio">
+																	<input type="radio" id="address<%= index %>" name="selectedAddress" class="custom-control-input" select-address data-address-id="<%= address._id %>" >
+																	<label class="custom-control-label" for="address<%= index %>">
+																		<span class="font-weight-normal" >Address <%= index + 1  %>:</span>
+																		 <span class="font-italic" ><%= user.address[index].landmark %></span></label>
+																</div><!-- End .custom-control -->
+															</td>
+															<td></td>
+														</tr><!-- End .summary-shipping-row -->
+	
+													<% }) %>
+	
+												</form>
+
+
+
+
+												
+											<!-- End .summary-shipping-estimate -->
+
+	                						<tr class="summary-total">
+	                							<td>Total:</td>
+	                							<td> ₹<%= totalPrice + deliveryCharge %></td>
+	                						</tr><!-- End .summary-total -->
+	                					</tbody>
+	                				</table><!-- End .table table-summary -->
+									<!-- <div class="md-5 my-3">
+											<input type="radio"> kkd
+									</div> -->
+
+	                				<a href="/checkout" class="btn btn-outline-primary-2 btn-order btn-block btn-to-checkout">PROCEED TO CHECKOUT</a>
+	                			</div><!-- End .summary -->
+
+		            			<a href="/product-list" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
+	                		</aside><!-- End .col-lg-3 -->
+	                	</div><!-- End .row -->
+
+						<%}else { %>
+							
+							
+							<div class="row d-flex justify-content-center .align-items-center p-5 m-5"  >
+								<h4 style="color: #c96;" >No products in the cart, <a href="/product-list">add products to cart</a></h4>
+							</div>
+							
+							
+						<% } %>
+
+
+	                </div><!-- End .container -->
+                </div><!-- End .cart -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+
+
+
+        <%- include('./layouts/footer-white.ejs') %>
+
+
+
+
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+
+
+            
+            <%- include('./layouts/mobile-nav.ejs') %>
+
+      
+			
+			
+
+
+
+           
+
+    
+    <!-- Plugins JS File -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/user/assets/js/jquery.min.js"></script>
+    <script src="/user/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/user/assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="/user/assets/js/jquery.waypoints.min.js"></script>
+    <script src="/user/assets/js/superfish.min.js"></script>
+    <script src="/user/assets/js/owl.carousel.min.js"></script>
+    <script src="/user/assets/js/bootstrap-input-spinner.js"></script>
+    <!-- Main JS File -->
+    <script src="/user/assets/js/main.js"></script>
+
+
+	<!-- custom-js -->
+	<script src="/user/custom-js/cart.js"></script>
+	
+</body>
+
+
+<!-- molla/cart.html  22 Nov 2019 09:55:06 GMT -->
+</html>

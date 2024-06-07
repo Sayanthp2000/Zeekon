@@ -1,0 +1,168 @@
+
+
+*
+{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    /* font-family: 'Courier New', Courier, monospace; */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+
+
+.div-1
+{
+    /* background-color: rgb(217, 230, 235); */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    min-height: 100vh;
+    height: 100%;
+}
+
+.div-2
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    /* background-color: darkblue; */
+    /* color: white; */
+    padding: 20px;
+    /* border: 2px solid black; */
+    border: 2px solid orange;
+    border-radius: 10px;
+    /* width: 600px; */
+    width: 80%;
+    min-width: 300px;
+    margin: 40px 20px;
+}
+
+.header
+{
+    margin: 10px 0;
+}
+
+form{
+    width: 90%;
+}
+
+textarea,
+input
+{
+    padding: 10px 20px;
+    border-radius: 5px;
+    /* border: none; */
+}
+
+
+.form-child
+{
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.input-item
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.two-col
+{
+    width: 49%;
+}
+
+.btn-submit
+{
+    width: 50%;
+    background-color: rgb(4, 102, 158);
+    padding: 10px 20px;
+    color: white;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.btn-submit:hover {
+    background-color: darkblue;
+    cursor: pointer;
+}
+
+
+.two-col-div{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+#image
+{
+    border: 1px solid black;
+}
+
+
+.image-preview-container-old, .image-preview-container-new {
+    display: flex;
+    flex-wrap: wrap;
+    /* border: 1px solid black; */
+    margin: 5px 0;
+}
+
+.image-preview-div {
+    position: relative;
+    margin-right: 10px;
+    margin-bottom: 10px; /* Add some spacing between images */
+    border: 1px solid black;
+}
+
+.image-preview {
+    width: 100px;
+    height: 100px;
+    padding: 10px;
+}
+
+.img-delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(155, 155, 155, 0.589);
+    color: red;
+    font-size: 8px;
+    border: none;
+    padding: 10px;
+    /* height: 30px; */
+    /* width: 30px; */
+    font-size: larger;
+    border-radius: 100%;
+}
+
+
+.img-delete-btn{
+    cursor: pointer;
+}
+
+
+.file-thumbnail{
+    padding: 10px;
+}
+
+
+#category{
+    padding: 5px;
+}
+
+
+.file-thumbnail{
+    border: 1px solid black;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background-color: rgba(155, 155, 155, 0.589);
+
+}

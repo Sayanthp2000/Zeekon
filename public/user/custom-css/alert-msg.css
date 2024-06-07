@@ -1,0 +1,39 @@
+.alert-error {
+    position: fixed;
+    top: 200px; /* Adjust this value to set the distance from the top */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30%;
+    background-color: #f44336;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    display: none;
+    animation: slideDown 1s forwards;
+    margin-top: 100px;
+    z-index: 10;
+  }
+
+  
+.alert-success {
+  position: fixed;
+  top: 200px; /* Adjust this value to set the distance from the top */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30%;
+  background-color: #128625;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  display: none;
+  animation: slideDown 1s forwards;
+  margin-top: 100px;
+  z-index: 10;
+}
+
+
+
+  @keyframes slideDown {
+    0% { top: -200px; }
+    100% { top: 0; }
+  }

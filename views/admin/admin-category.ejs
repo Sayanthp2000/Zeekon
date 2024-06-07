@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories | Purple Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/asset/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/asset/vendors/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/asset/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="/asset/vendors/font-awesome/css/font-awesome.min.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="/asset/vendors/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/asset/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css">
+    <!-- End plugin css for this page -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/asset/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/asset/images/favicon.png" />
+    <!-- Custom css for this page -->
+    <!-- <link rel="stylesheet" href="/admin/custom-css/admin-category.css"> -->
+    <!-- End custom css for this page -->
+    <!-- Custom js for this page -->
+    <script src="/admin/custom-js/admin-category.js" defer></script>
+    <!-- End custom js for this page -->
+
+    <style>
+        body, .container-scroller, .container-fluid, .main-panel, .content-wrapper, .page-header, .card-body, .table {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+    </style>
+</head>
+<body>
+    <div class="container-scroller">
+        <!-- Navbar starts here -->
+        <%- include('./layouts/navbar.ejs') %>
+        <!-- Navbar ends here -->
+
+        <div class="container-fluid page-body-wrapper">
+            <!-- Sidebar starts here -->
+            <%- include('./layouts/sidebar.ejs') %>
+            <!-- Sidebar ends here -->
+
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary text-white me-2">
+                                <i class="mdi mdi-folder-multiple"></i>
+                            </span> Categories
+                        </h3>
+                       
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 stretch-card grid-margin">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Add Category</h4>
+                                    <div class="msg-box">
+                                        <p class="msg-para"></p>
+                                    </div>
+                                    <form action="/admin/category" method="post">
+                                        <div class="form-group input-item form-child">
+                                            <label for="category">Category</label>
+                                            <input type="text" class="form-control" name="category"  placeholder="Enter category name" category id="category">
+                                            <!-- <button class="btn btn-update btn-gradient-primary me-2" type="button">Update</button>
+                                            <button class="btn btn-add-category btn-gradient-primary me-2" >Add Category</button> -->
+                                        </div>
+                                            <button class="btn btn-add-category btn-gradient-primary me-2" >Add Category</button>
+                                            <br><br>
+                                            <button class="btn btn-update btn-gradient-primary me-2" type="button">Update Category</button>
+                                           
+                                        
+                                    </form>
+                                 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Category List</h4>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>Category</th>
+                                                    <th>Products</th>
+                                                    <th>Status</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- <% categorys.forEach((category, index) => { %>
+                                                <tr>
+                                                    <td><%= index + 1 %></td>
+                                                    <td><%= category.categoryName %></td>
+                                                    <td>
+                                                        <% products.forEach((product) => { %>
+                                                            <% if(product.category == category._id) { %>
+                                                                <%= product.name %><br>
+                                                            <% } %>
+                                                        <% }) %>
+                                                    </td>
+                                                    <td>
+                                                        <label class="badge badge-<%= category.isActive ? 'success' : 'danger' %>">
+                                                            <%= category.isActive ? 'Listed' : 'Unlisted' %>
+                                                        </label>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn bg-gradient-success btn-sm btn-list" data-category-id="<%= category._id %>">List</button>
+                                                        <button class="btn btn-outline-warning btn-sm btn-unlist" data-category-id="<%= category._id %>">Unlist</button>
+                                                        <button class="btn btn-outline-primary btn-sm btn-edit" data-category-id="<%= category._id %>">Edit</button>
+                                                    </td>
+                                                </tr>
+                                                <% }) %> -->
+                                                <% categorys.forEach((category, index ) => {  %>
+
+                                                    <tr>
+                                                        <td><%= index + 1 %></td>
+                                                        <td><%= category.categoryName %></td>
+                        
+                                                        <td>
+                                                            <% products.forEach((product, index ) => {  %>
+                                                                <% if(product.category == category._id ){ %>
+                                                                    <%= product.name %> <br>
+                                                                <% } %>
+                                                            <% }) %>
+                                                        </td>
+                        
+                                                        <td class="user-status <%= category.isActive ? 'list' : 'unlist' %>" >
+                                                            <span>
+                                                                <% if(category.isActive){ %> Listed
+                                                                <%} else { %> UnListed <% } %>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-list bg-gradient-success btn-sm"    data-category-id="<%= category._id %>" >List</button>
+                                                            <button class="btn btn-unlist bg-gradient-warning btn-sm"  data-category-id="<%= category._id %>">Unlist</button>
+                                                            <button class="btn btn-edit bg-gradient-primary btn-sm "  data-category-id="<%= category._id %>">Edit</button>
+                                                        </td>                               
+                                                    </tr>
+                        
+                                                    <% }) %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- content-wrapper ends -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="/asset/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="/asset/vendors/chart.js/chart.umd.js"></script>
+    <script src="/asset/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="/asset/js/off-canvas.js"></script>
+    <script src="/asset/js/misc.js"></script>
+    <script src="/asset/js/settings.js"></script>
+    <script src="/asset/js/todolist.js"></script>
+    <script src="/asset/js/jquery.cookie.js"></script>
+    <!-- endinject -->
+</body>
+</html>

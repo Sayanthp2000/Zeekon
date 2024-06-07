@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offer Module | Purple Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/asset/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/asset/vendors/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/asset/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="/asset/vendors/font-awesome/css/font-awesome.min.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="/asset/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css">
+    <!-- End plugin css for this page -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/asset/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/asset/images/favicon.png" />
+    <!-- Custom css for this page -->
+    <!-- <link rel="stylesheet" href="/admin/custom-css/admin-offer.css"> -->
+    <!-- End custom css for this page -->
+    <!-- Custom js for this page -->
+    <script src="/admin/custom-js/admin-offer.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <!-- End custom js for this page -->
+
+    <style>
+        body, .container-scroller, .container-fluid, .main-panel, .content-wrapper, .page-header, .card-body, .form-control, .btn, .card-title {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+        .offer-item-heading {
+            cursor: pointer;
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+            background-color: #f9f9f9;
+        }
+        .offer-item-heading.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .offer-item-content {
+            display: none;
+        }
+        .offer-item-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-scroller">
+        <!-- Navbar starts here -->
+        <%- include('./layouts/navbar.ejs') %>
+        <!-- Navbar ends here -->
+
+        <div class="container-fluid page-body-wrapper">
+            <!-- Sidebar starts here -->
+            <%- include('./layouts/sidebar.ejs') %>
+            <!-- Sidebar ends here -->
+
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary text-white me-2">
+                                <i class="mdi mdi-tag"></i>
+                            </span> Offer Module
+                        </h3>
+                   
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="offer-item-container">
+                                        <div class="offer-items-head d-flex">
+                                            <div class="offer-items offer-item-heading active" data-target="#product-offer-section">Product</div>
+                                            <div class="offer-items offer-item-heading" data-target="#category-offer-section">Category</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="offer-item-content active" id="product-offer-section">
+                                        <h4 class="card-title">Product Offers</h4>
+                                        <form action="#" id="product-offer-form" class="forms-sample">
+                                            <div class="form-group row">
+                                                <label for="product-select" class="col-sm-3 col-form-label">Product Name</label>
+                                                <div class="col-sm-9">
+                                                    <select name="product" id="product-select" class="form-control">
+                                                        <% products.forEach((product) => { %>
+                                                            <option value="<%= product._id %>"><%= product.name %> - <%= product.discountPrice %>Rs</option>
+                                                        <% }) %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="offer-type" class="col-sm-3 col-form-label">Offer Type</label>
+                                                <div class="col-sm-9">
+                                                    <select name="offer-type" class="form-control">
+                                                        <option value="price" selected>Price</option>
+                                                        <option value="percentage">Percentage</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="value" class="col-sm-3 col-form-label">Offer Value</label>
+                                                <div class="col-sm-9">
+                                                    <input type="number" id="value" placeholder="Amount or Percentage" name="value" class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="startDate" class="col-sm-3 col-form-label">Offer Start Date</label>
+                                                <div class="col-sm-9">
+                                                    <input type="date" id="startDate" name="startDate" class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="endDate" class="col-sm-3 col-form-label">Offer End Date</label>
+                                                <div class="col-sm-9">
+                                                    <input type="date" id="endDate" name="endDate" class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="description" class="col-sm-3 col-form-label">Offer Description</label>
+                                                <div class="col-sm-9">
+                                                    <textarea id="description" placeholder="Offer Description" name="description" rows="4" class="form-control" required></textarea>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-gradient-primary me-2">Create Offer</button>
+                                        </form>
+                                        <div class="table-responsive mt-4">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>Product</th>
+                                                        <th>Description</th>
+                                                        <th>Offer Type</th>
+                                                        <th>Offer Value</th>
+                                                        <th>Start Date</th>
+                                                        <th>End Date</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% offerProducts.forEach((offer, index) => { %>
+                                                        <tr>
+                                                            <td><%= index + 1 %></td>
+                                                            <td><%= offer.product.name %></td>
+                                                            <td><%= offer.description %></td>
+                                                            <td><%= offer.offerType %></td>
+                                                            <td><%= offer.offerValue %></td>
+                                                            <td><%= offer.startDate.toLocaleDateString() %></td>
+                                                            <td><%= offer.endDate.toLocaleDateString() %></td>
+                                                            <td><button class="btn btn-danger btn-icon" data-offer-id="<%= offer._id %>"><i class="mdi mdi-delete"></i></button></td>
+                                                        </tr>
+                                                    <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="offer-item-content" id="category-offer-section">
+                                        <h4 class="card-title">Category Offers</h4>
+                                        <form action="#" id="category-offer-form" class="forms-sample">
+                                            <div class="form-group row">
+                                                <label for="category-select" class="col-sm-3 col-form-label">Category Name</label>
+                                                <div class="col-sm-9">
+                                                    <select name="category" id="category-select" class="form-control">
+                                                        <% categories.forEach((category) => { %>
+                                                            <option value="<%= category._id %>"><%= category.categoryName %></option>
+                                                        <% }) %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="offer-type" class="col-sm-3 col-form-label">Offer Type</label>
+                                                <div class="col-sm-9">
+                                                    <select name="offer-type" class="form-control">
+                                                        <option value="price" selected>Price</option>
+                                                        <option value="percentage">Percentage</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="value" class="col-sm-3 col-form-label">Offer Value</label>
+                                                <div class="col-sm-9">
+                                                    <input type="number" id="value" placeholder="Amount or Percentage" name="value" class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="startDate" class="col-sm-3 col-form-label">Offer Start Date</label>
+                                                <div class="col-sm-9">
+                                                    <input type="date" id="startDate" name="startDate" class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="endDate" class="col-sm-3 col-form-label">Offer End Date</label>
+                                                <div class="col-sm-9">
+                                                    <input type="date" id="endDate" name="endDate" class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="description" class="col-sm-3 col-form-label">Offer Description</label>
+                                                <div class="col-sm-9">
+                                                    <textarea id="description" placeholder="Offer Description" name="description" rows="4" class="form-control" required></textarea>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-gradient-primary me-2">Create Offer</button>
+                                        </form>
+                                        <div class="table-responsive mt-4">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>Category</th>
+                                                        <th>Description</th>
+                                                        <th>Offer Type</th>
+                                                        <th>Offer Value</th>
+                                                        <th>Start Date</th>
+                                                        <th>End Date</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% offerCategory.forEach((offer, index) => { %>
+                                                        <tr>
+                                                            <td><%= index + 1 %></td>
+                                                            <td><%= offer.category.categoryName %></td>
+                                                            <td><%= offer.description %></td>
+                                                            <td><%= offer.offerType %></td>
+                                                            <td><%= offer.offerValue %></td>
+                                                            <td><%= offer.startDate.toLocaleDateString() %></td>
+                                                            <td><%= offer.endDate.toLocaleDateString() %></td>
+                                                            <td><button class="btn btn-danger btn-icon" data-offer-id="<%= offer._id %>"><i class="mdi mdi-delete"></i></button></td>
+                                                        </tr>
+                                                    <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+                
+               
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+
+    <!-- plugins:js -->
+    <script src="/asset/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="/asset/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="/asset/js/off-canvas.js"></script>
+    <script src="/asset/js/hoverable-collapse.js"></script>
+    <script src="/asset/js/template.js"></script>
+    <script src="/asset/js/settings.js"></script>
+    <script src="/asset/js/todolist.js"></script>
+    <!-- endinject -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const headings = document.querySelectorAll('.offer-item-heading');
+            const sections = document.querySelectorAll('.offer-item-content');
+
+            headings.forEach(heading => {
+                heading.addEventListener('click', function () {
+                    headings.forEach(h => h.classList.remove('active'));
+                    sections.forEach(section => section.classList.remove('active'));
+
+                    this.classList.add('active');
+                    document.querySelector(this.dataset.target).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

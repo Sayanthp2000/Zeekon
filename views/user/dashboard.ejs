@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+	<head>
+		<%- include('./layouts/head.ejs') %>
+		<link rel="stylesheet" href="/user/custom-css/dashboard.css">
+	</head>
+
+
+<body>
+    <div class="page-wrapper">
+        
+        
+        <%- include('./layouts/header-2.ejs') %>
+
+        <main class="main">
+        	
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/product-list">Shop</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+            	<div class="dashboard">
+	                <div class="container">
+	                	<div class="row">
+	                		<aside class="col-md-4 col-lg-3">
+	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+								    <li class="nav-item">
+								        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+								    </li>
+								    <li class="nav-item d-none">
+								        <a class="nav-link" id="tab-add-link" data-toggle="tab" href="#tab-add-address" role="tab" aria-controls="tab-add-address" aria-selected="false" add-link> Add Address</a>
+								    </li>
+									<li class="nav-item d-none">
+								        <a class="nav-link" id="tab-edit-link" data-toggle="tab" href="#tab-edit-address" role="tab" aria-controls="tab-edit-address" aria-selected="false" edit-link > Edit Address</a>
+								    </li>
+									<li class="nav-item">
+								        <a class="nav-link" id="tab-wallet-link" data-toggle="tab" href="#tab-wallet" role="tab" aria-controls="tab-wallet" aria-selected="false">Wallet</a>
+								    </li>
+								    <li class="nav-item">
+								        <a class="nav-link" href="/logout">Sign Out</a>
+								    </li>
+								</ul>
+	                		</aside><!-- End .col-lg-3 -->
+
+	                		<div class="col-md-8 col-lg-9">
+	                			<div class="tab-content">
+								    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
+										<div class="msg-box" ><span class="msg-para"></span></div>
+										<div>
+											<form class="user-details-form">
+												
+												<label>Username *</label>
+												<input type="text" class="form-control" value="<%= user.username %>" name="username" >
+												
+												<label>Email *</label>
+												<input type="email" class="form-control" value="<%= user.email %>" name="email" >
+
+												<label>Referal Code </label>
+												<input type="text" class="form-control" value="<%= user.referalCode %>" name="referal_code" >
+
+												<hr>
+
+												<h6 >Change password</h6>
+												
+												<label>Old password ( Leave blank to leave unchanged ) </label>
+												<input type="password" class="form-control" name="oldpassword" >
+												
+												<div class="row">
+													<div class="col-sm-6">
+														<label>New Password *</label>
+														<input type="password" placeholder="password" class="form-control" name="password" >
+													</div><!-- End .col-sm-6 -->
+	
+													<div class="col-sm-6">
+														<label>Confirm new Password *</label>
+														<input type="password" placeholder="confirm password" class="form-control" name="passwordre" >
+													</div><!-- End .col-sm-6 -->
+												</div><!-- End .row -->
+
+	
+												<button type="submit" class="btn btn-outline-primary-2">
+													<span>SAVE CHANGES</span>
+													<i class="icon-long-arrow-right"></i>
+												</button>
+											</form>
+										</div>
+								    </div><!-- .End .tab-pane -->
+
+
+
+									<div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+										<% if(orders.length > 0){ %>
+
+											<% orders.forEach( (order) => { %>
+												<div class="border p-5 m-2 order-box d-flex" data-order-id="<%= order._id %>">
+													<div class="order-items d-flex flex-column flex-grow-1 align-items-start" style="width: 50%;">
+														<% order.products.forEach( product => { %>
+															<div class="d-flex align-items-center">
+																<div class="product-image-container">
+																	<img class="product-image" src="/products/<%= product.productId.images[0] %>" alt="product-image">
+																</div>
+																<div class="product-name"><%= product.productId.name %></div>
+															</div>
+															<hr>
+														<% } ) %>
+													</div>
+													<div class="order-items flex-grow-1" style="width: 25%;"><%= order.totalPrice %></div>
+													<div class="order-items flex-grow-1" style="width: 25%;"><%= order.orderMessage %></div>
+													<div class="order-items flex-grow-1" style="width: 25%;"><%= order.paymentMethod %></div>
+												</div>
+												
+											<%}) %>
+											<br>
+										<% }else { %>
+											<p>No order has been made yet.</p>
+											<a href="/product-list" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+										<%} %>
+									</div><!-- .End .tab-pane -->
+
+
+								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
+										<a href="#tab-add-address" class="add-address-link"> Add address <i class="icon-edit"></i></a></p>
+
+										<div class="address-container">
+											<!-- d-flex gap-5  -->
+										<% if(user.address.length > 0 ){ %>
+
+											<div class="address-list">
+
+											<% user.address.forEach( (address, index ) => { %> 
+												
+												
+												<div class="row">
+													<div >
+														<!-- class="col-lg-6" -->
+														<div class="card card-dashboard">
+
+														<div class="card-body">
+															<h3 class="card-title">Billing Address <%= index + 1 %></h3><!-- End .card-title -->
+	
+															<p><%= address.name %><br>
+																<%= address.email %><br>
+																<%= address.phone %><br>
+																<%= address.alt_phone %><br>
+																<%= address.country %><br>
+																<%= address.state %><br>
+																<%= address.city %><br>
+																<%= address.pincode %><br>
+																<%= address.landmark %><br>
+																<div class="btn-edit d-inline" data-address-id="<%= address._id %>" data-index="<%= index %>" ><a href="#">Edit <i class="icon-edit"></i></a><br></div>
+																<div class="btn-delete d-inline" data-address-id="<%= address._id %>" data-index="<%= index %>" ><a href="#"  >Delete <i class="fa-solid fa-trash"></i></a></div></p>
+														</div><!-- End .card-body -->
+
+														
+														
+													</div><!-- End .card-dashboard -->
+												</div><!-- End .col-lg-6 -->
+											</div>
+											<!-- End .row -->
+											<% }) %>
+											</div>
+											
+										<% }else { %>
+
+
+
+
+											<div class="card-body">
+												<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
+												
+												<p>You don't add any address<br>
+													
+													<!-- <a href="#tab-add-address" class="add-address-link"> Add address <i class="icon-edit"></i></a></p> -->
+											</div><!-- End .card-body -->
+
+
+											
+											<% } %>
+										</div>
+								    </div>
+									<!-- .End .tab-pane -->
+
+								    <div class="tab-pane fade" id="tab-add-address" role="tabpanel" aria-labelledby="tab-address-link" add-div>
+								    	<form id="address-add" address-add data-user-id="<%= user._id %>">
+
+											<h4 style="color: #c96;">Add Address</h4>
+			                				<hr class="md-3">
+
+			                				<label>Name *</label>
+			                				<input type="text" name="name" class="form-control" value="<%= user.username %>" >
+
+			                				<label>Email *</label>
+			                				<input type="email" name="email" class="form-control" value="<%= user.email %>" >
+
+											<div class="row">
+			                					<div class="col-sm-6">
+			                						<label>Phone * </label>
+			                						<input type="text" name="phone" class="form-control" >
+			                					</div><!-- End .col-sm-6 -->
+
+			                					<div class="col-sm-6">
+			                						<label>Alt Phone </label>
+			                						<input type="text" name="altphone" class="form-control" >
+			                					</div><!-- End .col-sm-6 -->
+			                				</div><!-- End .row -->
+
+											<div class="row">
+			                					<div class="col-sm-6">
+			                						<label>Pincode * </label>
+			                						<input type="text" name="pincode" class="form-control" >
+			                					</div><!-- End .col-sm-6 -->
+
+			                					<div class="col-sm-6">
+			                						<label>City * </label>
+			                						<input type="text" name="city" class="form-control" >
+			                					</div><!-- End .col-sm-6 -->
+			                				</div><!-- End .row -->
+
+											<div class="row">
+			                					<div class="col-sm-6">
+			                						<label>State * </label>
+			                						<input type="text" name="state" class="form-control" >
+			                					</div><!-- End .col-sm-6 -->
+
+			                					<div class="col-sm-6">
+			                						<label>Country * </label>
+			                						<input type="text" name="country" class="form-control" >
+			                					</div><!-- End .col-sm-6 -->
+			                				</div><!-- End .row -->
+
+		            						<label>landmark</label>
+		            						<textarea name="landmark" rows="6" class="form-control landmark" ></textarea>
+		            						<!-- <input type="text" name="landmark" class="form-control mb-2"> -->
+
+
+		                					<button type="submit" class="btn btn-outline-primary-2">
+			                					<span>SAVE </span>
+			            						<i class="icon-long-arrow-right"></i>
+			                				</button>
+			                			</form>
+								    </div><!-- .End .tab-pane -->
+
+									<!-- < if(address){ %> -->
+
+									<div class="tab-pane fade" id="tab-edit-address" role="tabpanel" aria-labelledby="tab-edit-link" edit-div >
+								    	<form id="address-edit" address-edit data-user-id="<%= user._id %>" >
+
+											<h4 style="color: #c96;">Edit Address</h4>
+			                				<hr class="md-3">
+			                				
+			                				<label>Name *</label>
+			                				<input type="text" name="name" id="name" class="form-control">
+
+			                				<label>Email *</label>
+			                				<input type="email" name="email" id="email" class="form-control" >
+
+											<div class="row">
+			                					<div class="col-sm-6">
+			                						<label>Phone * </label>
+			                						<input type="text" name="phone" id="phone" class="form-control" >
+			                					</div><!-- End .col-sm-6 -->
+
+			                					<div class="col-sm-6">
+			                						<label>Alt Phone </label>
+			                						<input type="text" name="altphone" id="alt_phone" class="form-control" >
+			                					</div><!-- End .col-sm-6 -->
+			                				</div><!-- End .row -->
+
+											<div class="row">
+			                					<div class="col-sm-6">
+			                						<label>Pincode * </label>
+			                						<input type="text" name="pincode" id="pincode" class="form-control" >
+			                					</div><!-- End .col-sm-6 -->
+
+			                					<div class="col-sm-6">
+			                						<label>City * </label>
+			                						<input type="text" name="city" id="city" class="form-control" >
+			                					</div><!-- End .col-sm-6 -->
+			                				</div><!-- End .row -->
+
+											<div class="row">
+			                					<div class="col-sm-6">
+			                						<label>State * </label>
+			                						<input type="text" name="state" id="state" class="form-control" >
+			                					</div><!-- End .col-sm-6 -->
+
+			                					<div class="col-sm-6">
+			                						<label>Country * </label>
+			                						<input type="text" name="country" id="country" class="form-control" >
+			                					</div><!-- End .col-sm-6 -->
+			                				</div><!-- End .row -->
+
+		            						<label>landmark</label>
+		            						<textarea name="landmark" rows="6" id="landmark" class="form-control landmark" ></textarea>
+		            						<!-- <input type="text" name="landmark" class="form-control mb-2"> -->
+
+
+		                					<button type="submit" class="btn btn-outline-primary-2">
+			                					<span>SAVE </span>
+			            						<i class="icon-long-arrow-right"></i>
+			                				</button>
+			                			</form>
+								    </div><!-- .End .tab-pane -->
+
+									<!-- < } %> -->
+
+									<div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
+										<div class="border p-5">
+											<h6 class="color-c96" >Wallet</h6>
+											<hr>
+											<p>Balance : <b><%= user.wallet.amount %></b></p>
+											<div>
+												<input type="number" name="wallet-amount" id="wallet-amount" placeholder="Enter an amount" class="px-3" >
+												<button class="btn btn-primary btn-wallet" data-user-id="<%= user._id %>">Add money</button>
+											</div>
+										</div>
+									</div>
+
+								</div>
+	                		</div><!-- End .col-lg-9 -->
+	                	</div><!-- End .row -->
+	                </div><!-- End .container -->
+                </div><!-- End .dashboard -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+
+
+        <%- include('layouts/footer-white.ejs') %>
+
+
+
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+   
+            
+            
+    <% include('./layouts/mobile-nav.ejs') %>
+
+
+
+    <!-- End .mobile-menu -->
+
+    
+    <!-- Plugins JS File -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="/user/assets/js/jquery.min.js"></script>
+    <script src="/user/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/user/assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="/user/assets/js/jquery.waypoints.min.js"></script>
+    <script src="/user/assets/js/superfish.min.js"></script>
+    <script src="/user/assets/js/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
+    <script src="/user/assets/js/main.js"></script>
+
+
+	<!-- Razorpay  -->
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+	<!-- custom-js -->
+	<script src="/user/custom-js/dashboard.js" defer ></script>
+
+
+
+</body>
+</html>

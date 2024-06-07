@@ -1,0 +1,201 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace;
+
+}
+
+
+.table-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: lightblue; */
+}
+
+.content-table{
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    width: 94%;
+    /* min-width: 400px; */
+    border-radius: 5px 5px 0 0;
+    /* overflow: hidden; */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15) ;
+}
+
+.content-table thead tr {
+    background-color: lightblue;
+    /* background-color: #009879; */
+    position: sticky;
+    top: 0;
+    color: #fff;
+    text-align:  left;
+    font-weight: bold;
+}
+
+.content-table th,
+.content-table td {
+    padding: 12px 15px;
+    /* max-width: 100px; */
+}
+
+.content-table tbody {
+    border-bottom: 1px solid #dddddd;
+}
+
+.content-table tbody tr:nth-of-type( even ){
+    background-color: #f3f3f3;
+}
+
+.content-table tbody tr {
+    border-bottom: 2px solid lightblue;
+    /* border-bottom: 2px solid #009879; */
+}
+
+.content-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+
+
+
+
+.content-table tbody td .btn-list
+{
+    padding: 5px 10px;
+    background-color: lightgreen;
+    border: none;
+    border-radius: 3px;    
+    margin: 5px 2px;
+}
+
+
+
+
+.content-table tbody td .btn-unlist
+{
+    padding: 5px 10px;
+    background-color: rgb(212, 212, 105);
+    border: none;
+    border-radius: 3px;
+    margin: 5px 2px;
+}
+
+
+
+
+.content-table tbody td .btn-delete
+{
+    padding: 5px 10px;
+    background-color: lightcoral;
+    border: none;
+    border-radius: 3px;
+    margin: 5px 2px;
+}
+
+
+
+
+.content-table tbody td .btn-edit
+{
+    padding: 5px 10px;
+    background-color: lightblue;
+    border: none;
+    border-radius: 3px;
+    margin: 5px 2px;
+}
+
+
+
+.list
+{
+    color: green;
+}
+
+
+
+.unlist
+{
+    color: red;
+}
+
+
+
+.add-category-box
+{
+    width: 100%;
+    /* border: 2px solid black; */
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.add-product-div2
+{
+    width: 95%;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid black;
+}
+
+
+
+
+.msg-box
+{
+   display: hidden;
+   /* padding: 20px; */
+   /* background-color: lightblue; */
+}
+
+
+
+
+.msg-para
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+.display-success
+{
+    padding: 10px;
+    background-color: rgba(144, 238, 144, 0.685);
+    width: 100%;
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: green;
+    font-weight: bold;
+}
+
+
+
+.display-error
+{
+    padding: 10px;
+    background-color: lightblue;
+    width: 100%;
+    margin: 0 0 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: red;
+    font-weight: bold;
+}
+
+
+
+
+.header 
+{
+    margin: 20px 0 ;
+}

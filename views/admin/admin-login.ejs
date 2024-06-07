@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="/admin/custom-css/adminLogin.css">
+    <link rel="stylesheet" href="/admin/custom-css/msg-box.css">
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <div class="form-box">
+            <form action="/admin-login" method="post">
+                <div class="form-item">
+                    <h2>Admin Login</h2>
+                </div><br>
+                <div class="msg-box">
+                    <p class="msg-para"></p>
+                </div>
+                <div class="form-item input-item">
+                    <!-- <label for="email">Email : </label> -->
+                    <!-- <br> -->
+                    <input type="email" name="email" placeholder="Email" email >
+                </div>
+                <div class="form-item input-item" >
+                    <!-- <label for="email">Password : </label> -->
+                    <!-- <br> -->
+                    <input type="password" name="password" placeholder="password" password >
+                </div>
+                <br>
+                <div class="form-item btn-submit">
+                    <button>Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="/admin/custom-js/admin-login.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+	<%- include('./layouts/head.ejs') %>
+</head>
+
+
+<body>
+    <div class="page-wrapper">
+
+
+
+        <%- include('./layouts/header-2.ejs') %>
+        
+
+
+        <main class="main">
+        	
+            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/cart">Cart</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                    </ol>
+                </div><!-- End .container -->
+            </nav><!-- End .breadcrumb-nav -->
+
+            <div class="page-content">
+            	<div class="checkout">
+	                <div class="container">
+						<div class="d-flex gap-3">
+							<div class="checkout-discount">
+								<form action="#">
+									<input type="text" class="form-control"  id="checkout-discount-input" list="hellow">
+									<label for="checkout-discount-input" class="text-truncate" style="z-index: -1;">Have a coupon? <span>Click here to enter your code</span></label>
+									<datalist id="hellow">
+										<% coupons.forEach( coupon => { %>
+											<option value="<%= coupon.couponCode %>"></option>
+											<% }) %>
+										</datalist>
+									</form>
+								</div><!-- End .checkout-discount -->
+								<div class="ml-3"><button class="btn btn-warning btn-apply-coupon">Apply coupon</button></div>
+						</div>
+            			<form action="#" id="checkout-order" data-user-id="<%= user._id %>">
+		                	<div class="row">
+		                		<div class="col-lg-9">
+		                			<h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+									<label>Name *</label>
+									<input type="text" name="name" class="form-control" value="<%=  (address)? address.name : user.username %>" required>
+
+									<label>Email *</label>
+									<input type="email" name="email" class="form-control" value="<%= (address)? address.email : user.email %>" required>
+
+									<div class="row">
+										<div class="col-sm-6">
+											<label>Phone * </label>
+											<input type="text" name="phone" class="form-control" value="<%= (address)? address.phone : '' %>" required >
+										</div><!-- End .col-sm-6 -->
+
+										<div class="col-sm-6">
+											<label>Alt Phone </label>
+											<input type="text" name="altphone" class="form-control" value="<%= (address)? address.alt_phone : '' %>" required >
+										</div><!-- End .col-sm-6 -->
+									</div><!-- End .row -->
+
+									<div class="row">
+										<div class="col-sm-6">
+											<label>Pincode * </label>
+											<input type="text" name="pincode" class="form-control" value="<%= (address)? address.pincode : '' %>" required >
+										</div><!-- End .col-sm-6 -->
+
+										<div class="col-sm-6">
+											<label>City * </label>
+											<input type="text" name="city" class="form-control" value="<%= (address)? address.city : '' %>" required >
+										</div><!-- End .col-sm-6 -->
+									</div><!-- End .row -->
+
+									<div class="row">
+										<div class="col-sm-6">
+											<label>State * </label>
+											<input type="text" name="state" class="form-control" value="<%= (address)? address.state : '' %>" required >
+										</div><!-- End .col-sm-6 -->
+
+										<div class="col-sm-6">
+											<label>Country * </label>
+											<input type="text" name="country" class="form-control" value="<%= (address)? address.country : '' %>" required >
+										</div><!-- End .col-sm-6 -->
+									</div><!-- End .row -->
+
+									<label>landmark</label>
+									<textarea name="landmark" rows="6" class="form-control landmark" required ><%= (address)? address.landmark : '' %></textarea>
+
+
+	        							<!-- <div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" id="checkout-create-acc">
+											<label class="custom-control-label" for="checkout-create-acc">Create an account?</label>
+										</div> -->
+										<!-- End .custom-checkbox -->
+
+										<!-- <div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" id="checkout-diff-address">
+											<label class="custom-control-label" for="checkout-diff-address">Ship to a different address?</label>
+										</div> -->
+										<!-- End .custom-checkbox -->
+
+	                					<label>Order notes (optional)</label>
+	        							<textarea name="ordernotes" class="form-control order-notes" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+		                		</div><!-- End .col-lg-9 -->
+		                		<aside class="col-lg-3">
+		                			<div class="summary">
+		                				<h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+		                				<table class="table table-summary">
+		                					<thead>
+		                						<tr>
+		                							<th>Product</th>
+		                							<th>Total</th>
+		                						</tr>
+		                					</thead>
+
+		                					<tbody>
+
+
+												<% let productTotal = 0 %>
+		                						<% products.forEach( item => { %>
+													<% if(item.product.quantity <= 0) return; %>
+													
+													<% productTotal += item.product.discountPrice * item.count %>
+													<tr>
+														<td><a ><%= item.product.name %></a></td>
+														<td> ₹<%= item.product.discountPrice * item.count %></td>
+													</tr>
+
+
+												<% }); %>
+                                                
+												
+											
+
+
+		                						<tr class="summary-subtotal">
+		                							<td>Subtotal:</td>
+		                							<td> ₹<%= totalPrice %></td>
+		                						</tr><!-- End .summary-subtotal -->
+		                						<tr>
+		                							<td>Shipping:</td>
+		                							<td><%= deliveryCharge %></td>
+		                						</tr>
+		                						<tr class="summary-total">
+		                							<td>Total:</td>
+		                							<td id="totalPrice"> ₹<%= totalPrice + deliveryCharge %></td>
+		                						</tr><!-- End .summary-total -->
+		                					</tbody>
+		                				</table><!-- End .table table-summary -->
+
+		                				<div class="accordion-summary" id="accordion-payment" >
+										    <div class="card" select-payment-method id="payment-1" >
+										        <div class="card-header" id="heading-1">
+										            <h2 class="card-title">
+										                <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+										                    Cash on delivery
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+										            <div class="card-body">
+														Cash On Delivery. Pay when item arrived in front of you
+										            </div><!-- End .card-body -->
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+
+
+										    <div class="card" select-payment-method id="payment-2" >
+										        <div class="card-header" id="heading-3">
+										            <h2 class="card-title">
+										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+										                    Direct bank transfer
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+										            <div class="card-body">
+										                Make payment through razorpay payment gateway using card or net banking.
+										            </div><!-- End .card-body -->
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+
+										    <div class="card" select-payment-method id="payment-3" >
+										        <div class="card-header" id="heading-5">
+										            <h2 class="card-title">
+										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+										                    Wallet
+										                    <img src="/user/assets/images/payments-summary.png" alt="payments cards">
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+										            <div class="card-body"> Done your payment from the wallet money.
+										            </div><!-- End .card-body -->
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+										</div><!-- End .accordion -->
+
+		                				<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block" id="rzp-button1">
+		                					<span class="btn-text">Place Order</span>
+		                					<span class="btn-hover-text">Place Order</span>
+		                				</button>
+
+										
+		                			</div><!-- End .summary -->
+		                		</aside><!-- End .col-lg-3 -->
+		                	</div><!-- End .row -->
+            			</form>
+	                </div><!-- End .container -->
+                </div><!-- End .checkout -->
+            </div><!-- End .page-content -->
+        </main><!-- End .main -->
+
+
+
+        <%- include('./layouts/footer-white.ejs') %>
+
+
+        
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+
+
+
+    <%- include('./layouts/mobile-nav.ejs') %>
+
+	
+	
+	
+    <!-- End .mobile-menu-container -->
+	
+    
+    <!-- Plugins JS File -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script src="/user/assets/js/jquery.min.js"></script>
+    <script src="/user/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/user/assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="/user/assets/js/jquery.waypoints.min.js"></script>
+    <script src="/user/assets/js/superfish.min.js"></script>
+    <script src="/user/assets/js/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
+    <script src="/user/assets/js/main.js"></script>
+	
+
+   
+   <script>
+	var productTotal = `<%= productTotal %>`;		
+	console.log('productTotal : ' + productTotal );
+	</script>
+
+	<!-- Razorpay SDK -->
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+	<!-- custom-js -->
+	<script src="/user/custom-js/checkout.js"></script>
+	
+
+</body>
+</html>

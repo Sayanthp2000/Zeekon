@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Sign Up - Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assetss/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="assetss/css/main.css" rel="stylesheet" type="text/css" />
+    
+    <link rel="stylesheet" href="/user/custom-css/msg-boxes.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <main>
+       
+        <section class="content-main mt-80 mb-80">
+            <div class="card mx-auto card-login">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Sign Up</h4>
+                    <form action="/signup" method="post" id="signup-form">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Username:</label>
+                            <input class="form-control" type="text" placeholder="Your name" name="name" id="name" username>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email">Email : </label>
+                            <input class="form-control" type="email" placeholder="abc@gmail.com" name="email" id="email" email>
+                        </div>
+                        <div class="mb-3">
+                            
+                            <label for="username">Password : </label>
+                            <input class="form-control" type="password" placeholder="Password" name="password" id="password" password>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password:</label>
+                            <input class="form-control" type="password" placeholder="Password again" name="PasswordRe" id="confirmPassword" passwordRe >
+                        </div>
+                        <div class="login-link form-child">
+                            <p><a href="/login">Already have an Account? Login</a></p>
+                        </div>
+                        <div class="button-div form-child">
+                            <button type="submit" class="btn btn-primary w-100" id="submit-button">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+       
+    </main>
+    <script src="assetss/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="assetss/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="assetss/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="/user/custom-js/signup.js" defer></script>
+    <!-- Main Script -->
+    <script src="assetss/js/main.js" type="text/javascript"></script>
+</body>
+
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product | Purple Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/asset/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/asset/vendors/ti-icons/css/themify-icons.css">
+    <link rel="stylesheet" href="/asset/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="/asset/vendors/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/admin/custom-css/msg-box.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="/asset/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css">
+    <!-- End plugin css for this page -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/asset/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/asset/images/favicon.png" />
+    <!-- Custom css for this page -->
+    <link rel="stylesheet" href="/admin/custom-css/edit-products.css">
+    <!-- End custom css for this page -->
+    <!-- Custom js for this page -->
+    <script src="/admin/custom-js/edit-product.js" defer></script>
+    <!-- End custom js for this page -->
+
+    <style>
+        body, .container-scroller, .container-fluid, .main-panel, .content-wrapper, .page-header, .card-body, .table {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+    </style>
+</head>
+<body>
+    <div class="container-scroller">
+        <!-- Navbar starts here -->
+        <%- include('./layouts/navbar.ejs') %>
+        <!-- Navbar ends here -->
+
+        <div class="container-fluid page-body-wrapper">
+            <!-- Sidebar starts here -->
+            <%- include('./layouts/sidebar.ejs') %>
+            <!-- Sidebar ends here -->
+
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="page-header">
+                        <h3 class="page-title">
+                            <span class="page-title-icon bg-gradient-primary text-white me-2">
+                                <i class="mdi mdi-pencil-box"></i>
+                            </span> Edit Product
+                        </h3>
+                       
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Product Information</h4>
+                                    <div class="msg-box">
+                                        <p class="msg-para"></p>
+                                    </div>
+                                    <form action="/admin/products/edit/<%= product._id %>" method="post" data-product-id="<%= product._id %>" enctype="multipart/form-data">
+                                        <div class="form-group">
+                                            <label for="name">Name *</label>
+                                            <input type="text" class="form-control" id="name" name="name" value="<%= product.name %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="price">Price *</label>
+                                            <input type="number" class="form-control" id="price" name="price" value="<%= product.price %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="quantity">Quantity *</label>
+                                            <input type="number" class="form-control" id="quantity" name="quantity" value="<%= product.quantity %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="size">Size</label>
+                                            <input type="text" class="form-control" id="size" name="size" value="<%= product.size %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="color">Color</label>
+                                            <input type="text" class="form-control" id="color" name="color" value="<%= product.color %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <textarea class="form-control" id="description" name="description" rows="4"><%= product.description %></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="details">Details</label>
+                                            <textarea class="form-control" id="details" name="details" rows="6"><%= product.details %></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="category">Category</label>
+                                            <select class="form-control" id="category" name="category">
+                                                <% categorys.forEach(category => { %>
+                                                    <option value="<%= category._id %>" <%= (product.category && category._id.toString() === product.category._id.toString()) ? 'selected' : '' %>><%= category.categoryName %></option>
+                                                <% }) %>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="images">Images</label>
+                                            <div class="image-preview-container-old">
+                                                <% product.images.forEach((image, index) => { %>
+                                                    <div class="image-preview-div">
+                                                        <img src="/products/<%= image %>" class="image-preview" alt="Product Image">
+                                                        <i class="fa-solid fa-trash img-delete-btn" data-image-url="<%= image %>" data-product-id="<%= product._id %>"></i>
+                                                    </div>
+                                                <% }); %>
+                                            </div>
+                                            <div class="image-preview-container-new" id="selected-files-preview"></div>
+                                            <input type="file" class="form-control" id="images" name="images" accept="image/*" multiple>
+                                        </div>
+                                        <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="/asset/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="/asset/vendors/chart.js/chart.umd.js"></script>
+    <script src="/asset/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="/asset/js/off-canvas.js"></script>
+    <script src="/asset/js/misc.js"></script>
+    <script src="/asset/js/settings.js"></script>
+    <script src="/asset/js/todolist.js"></script>
+    <script src="/asset/js/jquery.cookie.js"></script>
+    <!-- endinject -->
+</body>
+</html>
