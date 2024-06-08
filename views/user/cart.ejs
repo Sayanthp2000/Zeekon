@@ -123,20 +123,15 @@
 	                			<div class="summary summary-cart">
 	                				<h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
 
-	                				<table class="table table-summary">
+	                				<!-- <table class="table table-summary">
 	                					<tbody>
 	                						<tr class="summary-subtotal">
 	                							<td>Subtotal:</td>
 
-												<!-- < let totalPrice = 0 %> -->
-												<!-- < cartProducts.cart.forEach( item => { %> -->
-												<!-- < if( item.product.quantity > 0 ){ %> -->
-												<!-- < totalPrice += item.product.price * item.count %> -->
-												<!-- < } %> -->
-												<!-- < }); %> -->
+											
 
 	                							<td> ₹<%= totalPrice %></td>
-	                						</tr><!-- End .summary-subtotal -->
+	                						</tr>
 	                						<tr class="summary-shipping">
 	                							
 	                							<td>&nbsp;</td>
@@ -154,12 +149,99 @@
 
 											
 	                						
+											
+											
+	                						<tr class="summary-shipping-estimate">
+												<td>
+													
+													<a href="/dashboard#add-address">Change address</a></td>
+													<td>&nbsp;</td>
+												</tr>
+												
+												<tr class="summary-shipping">
+													<% if(user.address.length < 0){ %>
+														<td><a href="/dashboard#address"><span class="font-weight-bold">Add Address</span></a></td>
+													<%}else{ %>
+														<td><span class="font-weight-bold">Address :</span></td>
+														<td>&nbsp;</td>
+													<% } %>
+												</tr>
+
+												<form id="address-form">
+
+													<tr class="summary-shipping-row">
+														<td>
+															<div class="custom-control custom-radio">
+																<input type="radio" id="no-address" name="selectedAddress" class="custom-control-input" select-address data-address-id="" >
+																<label class="custom-control-label" for="no-address">
+																	<span class="font-weight-normal" >Add New Address. </span>
+																	 <span class="font-italic" ></span></label>
+															</div>
+														</td>
+														<td></td>
+													</tr>
+
+													<% user.address.forEach( ( address, index ) => { %> 
+	
+	
+														<tr class="summary-shipping-row">
+															<td>
+																<div class="custom-control custom-radio">
+																	<input type="radio" id="address<%= index %>" name="selectedAddress" class="custom-control-input" select-address data-address-id="<%= address._id %>" >
+																	<label class="custom-control-label" for="address<%= index %>">
+																		<span class="font-weight-normal" >Address <%= index + 1  %>:</span>
+																		 <span class="font-italic" ><%= user.address[index].landmark %></span></label>
+																</div>
+															</td>
+															<td></td>
+														</tr>
+	
+													<% }) %>
+	
+												</form>
+
+
+
+
+												
+											
+
+	                						<tr class="summary-total">
+	                							<td>Total:</td>
+	                							<td> ₹<%= totalPrice + deliveryCharge %></td>
+	                						</tr>
+	                					</tbody>
+	                				</table> -->
+
+									<table class="table table-summary">
+	                					<tbody>
+	                						<tr class="summary-subtotal">
+	                							<td>Subtotal:</td>
+	                							<td>₹<%= totalPrice %></td>
+	                						</tr><!-- End .summary-subtotal -->
+	                						<tr class="summary-shipping">
+	                							<td>Shipping:</td>
+	                							<td>&nbsp;</td>
+	                						</tr>
+
+	                						<tr class="summary-shipping-row">
+	                							<td>
+													<div class="custom-control custom-radio">
+														<input checked aria-selected="true" type="radio" id="free-shipping" name="shipping" class="custom-control-input">
+														<label class="custom-control-label" for="free-shipping">Shipping</label>
+													</div><!-- End .custom-control -->
+	                							</td>
+	                							<td>₹<%= deliveryCharge %>.00</td>
+	                						</tr><!-- End .summary-shipping-row -->
+
+											
+	                						
 											<!-- End .summary-shipping-row -->
 											
 	                						<tr class="summary-shipping-estimate">
 												<td>
 													<!-- Estimate for Your Country<br> -->
-													<a href="/dashboard#add-address">Change address</a></td>
+													<a href="/dashboard#add-address">Change or Add address</a></td>
 													<td>&nbsp;</td>
 												</tr>
 												
@@ -204,29 +286,22 @@
 													<% }) %>
 	
 												</form>
-
-
-
-
-												
+						
 											<!-- End .summary-shipping-estimate -->
 
 	                						<tr class="summary-total">
 	                							<td>Total:</td>
-	                							<td> ₹<%= totalPrice + deliveryCharge %></td>
+	                							<td>₹<%= totalPrice + deliveryCharge %></td>
 	                						</tr><!-- End .summary-total -->
 	                					</tbody>
 	                				</table><!-- End .table table-summary -->
-									<!-- <div class="md-5 my-3">
-											<input type="radio"> kkd
-									</div> -->
 
 	                				<a href="/checkout" class="btn btn-outline-primary-2 btn-order btn-block btn-to-checkout">PROCEED TO CHECKOUT</a>
-	                			</div><!-- End .summary -->
+	                			</div>
 
 		            			<a href="/product-list" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
-	                		</aside><!-- End .col-lg-3 -->
-	                	</div><!-- End .row -->
+	                		</aside>
+	                	</div>
 
 						<%}else { %>
 							

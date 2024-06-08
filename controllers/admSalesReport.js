@@ -450,7 +450,7 @@ async function genSalesReportPDF(doc, ...parameters) {
 
     doc.font('Helvetica').fontSize(10).text(`Date : ${new Date(Date.now()).toLocaleDateString()}`, { align: 'right'});
 
-    doc.font('Helvetica-Bold').fontSize(14).text('MARGIN');
+    doc.font('Helvetica-Bold').fontSize(14).text('Zeekon');
     doc.moveDown(0.3)
         .font('Helvetica')
         .fontSize(8).text(`Abcd street`)
@@ -463,7 +463,7 @@ async function genSalesReportPDF(doc, ...parameters) {
     doc.moveDown(2);
     doc.font('Helvetica-Bold').moveDown(0.5)
         .text(`Orders : ${no_of_orders}`).moveDown(0.5)
-        .text(`Revenue : ${total_revenue}$`).moveDown(0.5)
+        .text(`Revenue : ${total_revenue}`).moveDown(0.5)
         .text(`Users signup  : ${no_of_users}`);
     generateHr(doc, doc.y + 10);
         

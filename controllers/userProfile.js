@@ -303,16 +303,19 @@ exports.genInvoice = async ( req, res ) => {
   
     generateHr(doc, doc.y + 10);
     y+= 20;
-  
-    doc.font('Helvetica').text(`subTotal : ${ order.totalPrice }`, 450, y );
-    doc.font('Helvetica').text(`Delivery : ${ 0 }`, 450, y + 20 );
+     
+    order.products.forEach(( item, index ) => {
+    doc.font('Helvetica').text(`subTotal : ${ item.productTotalPrice }`, 450, y );
+  });
+    // doc.font('Helvetica').text(`Delivery : ${ 0 }`, 450, y + 20 );
     doc.moveDown();
   
     doc.strokeColor("#aaaaaa").lineWidth(1).moveTo(450, doc.y).lineTo(550, doc.y).stroke();
     
     doc.moveDown();
-    doc.font('Helvetica-Bold').text(`subTotal : ${ order.totalPrice }`);
-  
+    order.products.forEach(( item, index ) => {
+      doc.font('Helvetica-Bold').text(`subTotal : ${ item.productTotalPrice }`);
+    })
   
     return;
   };

@@ -86,7 +86,15 @@
                                 <% if(order.couponUsed){ %>
                                     <div>Coupon : <%= order.couponUsed %></div>    
                                 <% } %>
-                                <div><b>total price : ₹<%= order.totalPrice %></b></div>
+                                  
+                                <% order.products.forEach(( product ) => { %>
+
+
+                                <!-- <div><b>total price : ₹<%= order.totalPrice %></b></div> -->
+                                <div><b>total price : ₹<%= product.productTotalPrice %></b></div>
+                                
+                                <%}) %>
+                                
                                 <% if(!order.pending){ %>
                                     <div><button id="btn-invoice" type="button" class="btn btn-primary" data-order-id="<%= order._id %>">Download Invoice</button></div>
                                 <% } %>
@@ -170,6 +178,7 @@
     </div><!-- End .modal -->
 
     <!-- Plugins JS File -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="/user/assets/js/jquery.min.js"></script>
     <script src="/user/assets/js/bootstrap.bundle.min.js"></script>
     <script src="/user/assets/js/jquery.hoverIntent.min.js"></script>

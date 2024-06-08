@@ -1,7 +1,7 @@
 
 var mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const { resetPassword } = require('../controllers/userController');
+
+
 
 var Schema = mongoose.Schema;
 

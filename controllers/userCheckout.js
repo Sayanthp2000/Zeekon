@@ -54,13 +54,15 @@ exports.checkoutPost = async (req, res) => {
       let totalPrice = 0;
       productDetails.forEach((item, index) => {
         const itemPrice = item.product ? (item.product.price || 1) : 0;
+        const itemdiscountPrice = item.product ? (item.product.discountPrice || 1) : 0;
         totalPrice += itemPrice * item.count;
+        discountPrice = itemdiscountPrice * item.count;
       });
       let originalPrice = totalPrice;
       if(req.body.discountPrice) totalPrice -= req.body.discountPrice;
       console.log('.discountPrice : ' + req.body.discountPrice, 'totalPrice : ' + totalPrice );
 
-      if(totalPrice > 3000 && req.body.paymentMethod === 'COD' ) return res.status(400).json({ success: false, error: 'Cash On Delivery is not available for products more than 1000Rs'});
+      if(totalPrice > 1000 && req.body.paymentMethod === 'COD' ) return res.status(400).json({ success: false, error: 'Cash On Delivery is not available for products more than 1000Rs'});
       if(totalPrice < 500 ) totalPrice += parseInt(process.env.DELIVERY_CHARGE);
   
       const products = [];
@@ -71,10 +73,15 @@ exports.checkoutPost = async (req, res) => {
         }
         dbProduct.quantity -= item.count;
         await dbProduct.save();
+        let deliveryCharge = 0;
+           console.log(totalPrice);
+        if( totalPrice <= 500 )  deliveryCharge = (process.env.DELIVERY_CHARGE)*1;
+
         products.push({
           productId: item.product._id,
           quantity: item.count,
-          productTotalPrice: item.product.discountPrice * item.count,
+          productTotalPrice: (item.product.discountPrice * item.count) + parseInt(deliveryCharge)
+          
         });
       }
   
@@ -117,7 +124,7 @@ exports.checkoutPost = async (req, res) => {
     try {
         const user = await userModel.findById(req.session.user._id);
         if(!user) return res.status(400).json({ error: 'User not found, Login again'});
-        // if(typeof Number(req.body.pincode) !== 'number' ) return res.status(400).json({ error: 'pincode must be number'});
+       
   
         console.log(req.body)
   

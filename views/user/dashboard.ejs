@@ -118,7 +118,11 @@
 															<hr>
 														<% } ) %>
 													</div>
-													<div class="order-items flex-grow-1" style="width: 25%;"><%= order.totalPrice %></div>
+													<% order.products.forEach(( product ) => { %>
+
+														<div class="order-items flex-grow-1" style="width: 25%;"> ₹<%= product.productTotalPrice %></div>
+														
+														<%}) %>
 													<div class="order-items flex-grow-1" style="width: 25%;"><%= order.orderMessage %></div>
 													<div class="order-items flex-grow-1" style="width: 25%;"><%= order.paymentMethod %></div>
 												</div>
