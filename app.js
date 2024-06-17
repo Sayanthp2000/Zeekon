@@ -11,7 +11,7 @@ const passport = require("passport");
 
 dotenv.config();
 
-const passportStrategy = require("./middlewares/passport");
+require("./middlewares/passport");
 
 
 const PORT = process.env.PORT || 3000

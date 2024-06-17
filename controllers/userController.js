@@ -110,7 +110,7 @@ exports.userSignupGet = ( req, res ) => {
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: email,
-            subject: 'sending email to you',
+            subject: 'OTP for Zeekon ecommerce',
             text: `Your otp to verify your account is ${otp}, Thank you`
         }
 
@@ -407,20 +407,6 @@ exports.resetPassword = async (req, res) => {
     
     
     
-    exports.productListGet = async ( req, res ) => {
-        try{
-            const products = await productModel.find({ status: { $ne: false } });
-            const totalDocs = products.length;
-            const categorys = await categoryModel.find({});
-            res.render('product-list.ejs', { products, totalDocs, userIn: req.session.userIn, categorys });
-       }
-       catch(error){
-        console.log('error in productListGet: ' + error );
-        }
-    }
-    
-    
-    
     exports.productListGetSortBy = async (req, res) => {
         try {
           const { sortBy } = req.params;
@@ -527,7 +513,66 @@ exports.resetPassword = async (req, res) => {
     };
 
 
- 
+    exports.productListGet = async (req, res) => {
+      try {
+          const page = parseInt(req.query.page) || 1; // Get the current page from query parameter, default is 1
+          const limit = 6; // Number of products per page
+          const skip = (page - 1) * limit;
+  
+          const sortBy = req.query.sort || 'popularity';
+          const search = req.query.search || "";
+          const category = req.query.category || "";
+          const min = parseInt(req.query.min) || 0;
+          const max = parseInt(req.query.max) || Infinity;
+  
+          // Define sort criteria based on sortBy parameter
+          let sortCriteria;
+          if (sortBy === "a-to-z") sortCriteria = { name: 1 };
+          else if (sortBy === "z-to-a") sortCriteria = { name: -1 };
+          else if (sortBy === "low-to-high") sortCriteria = { price: 1 };
+          else if (sortBy === "high-to-low") sortCriteria = { price: -1 };
+          else if (sortBy === "new-arrivals") sortCriteria = { createdAt: -1 };
+          else sortCriteria = { popularity: -1 }; // default sorting
+  
+          // Build query for filtering products
+          let query = { status: { $ne: false }, name: { $regex: search, $options: "i" } };
+  
+          if (category) {
+              query.category = { $in: category.split(",") };
+          }
+          
+          query.price = { $gte: min, $lte: max };
+  
+          // Find products with pagination, sorting, and filtering
+          const products = await productModel.find(query)
+              .sort(sortCriteria)
+              .skip(skip)
+              .limit(limit);
+  
+          const totalDocs = await productModel.countDocuments(query); // Total number of products
+          const totalPages = Math.ceil(totalDocs / limit); // Total number of pages
+  
+          const categorys = await categoryModel.find({}); // Fetch categories
+  
+          res.render('product-list.ejs', {
+              products,
+              totalDocs,
+              userIn: req.session.userIn,
+              categorys,
+              currentPage: page,
+              totalPages,
+              sortBy,
+              search,
+              category,
+              min,
+              max
+          });
+      } catch (error) {
+          console.log('error in productListGet: ' + error);
+          res.status(500).send('Server Error');
+      }
+  };
+  
 
 
 

@@ -3,9 +3,7 @@ const form = document.querySelector('form');
 const msgPara = document.querySelector('.msg-para');
 const forgotPass = document.querySelector('.forgot-link');
 
-// forgotPass.addEventListener('click', () => {
-//     window.location.href = '/login/forgot-password'
-// })
+
 
 form.addEventListener('submit', async (event) => {
    try{

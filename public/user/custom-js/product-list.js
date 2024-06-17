@@ -44,29 +44,6 @@ categories.addEventListener('change', (event) => {
     }
 })
 
- // Initialize the noUiSlider
-var slider = document.getElementById('slider');
-	noUiSlider.create(slider, {
-	  start: [0, 8000], // Initial values
-	  connect: true,
-	  range: {
-	    'min': 0,
-	    'max': 10000
-	  }
-});
-let minPrice, maxPrice;
-slider.noUiSlider.on('change', function(values, handle) {
-	const priceRange = document.querySelector('#filter-price-range');
-	minPrice = parseInt(values[0]), maxPrice = parseInt(values[1])
-	priceRange.innerHTML = `₹${minPrice} - ₹${maxPrice}`;
-  
-  // sendDataToBackend(values);
-});
-
-slider.noUiSlider.on('slide', function( values, handle){
-  document.querySelector('.min-price').innerHTML = parseInt(values[0]);
-  document.querySelector('.max-price').innerHTML = parseInt(values[1]);
-})
 
 
 
@@ -184,11 +161,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     sortDropdown.addEventListener('change', applyFilters);
     searchInput.addEventListener('input', applyFilters);
-    filterButton.addEventListener('click', applyFilters);
+   
 
     categoryCheckboxes.forEach(checkbox => checkbox.addEventListener('change', applyFilters));
-    priceSlider.noUiSlider.on('change', applyFilters);
+    
 
     // Initialize event listeners on initial load
     attachEventListenersToNewButtons();
 });
+
+
+// Price Slider
+var priceSlider = document.getElementById('price-slider');
+if (priceSlider) {
+    noUiSlider.create(priceSlider, {
+        start: [0, 1000],
+        connect: true,
+        step: 1,
+        range: {
+            'min': 0,
+            'max': 1000
+        }
+    });
+
+    // Update the filter-price-range span with the current values
+    priceSlider.noUiSlider.on('update', function (values, handle) {
+        document.getElementById('filter-price-range').innerHTML = values[0] + '₹ - ' + values[1] + '₹';
+    });
+}

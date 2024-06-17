@@ -76,10 +76,7 @@ const displayError = (result) => {
 
 
 const displaySuccess = (result) => {
-    console.log('before share body');
     shareBody(body);
-    console.log('after sharebody');
-
     msgPara.innerHTML = result.message;
 }
 

@@ -38,12 +38,14 @@ exports.orderCancellationPath = async ( req, res ) => {
     let user;
     try{
         const dbOrder = await orderModel.findById(orderId).populate('products.productId');
+        const orderProduct = dbOrder.products.find( item => item.productId._id.toString() === productId )
         // console.log(dbOrder);
         if(dbOrder.paymentMethod !== 'COD'){
             user = await userModel.findById(dbOrder.userId);
             if(!user) return res.status(404).json({ error: 'user not found, login again'});
-            user.wallet.amount += parseInt(dbOrder.totalPrice);
+            user.wallet.amount += parseInt(orderProduct.productTotalPrice);
             await user.save();
+            
         }
         const index = dbOrder.products.findIndex( product => product.productId._id.toString() === productId );
         console.log(index);
@@ -62,6 +64,36 @@ exports.orderCancellationPath = async ( req, res ) => {
     }
 }
 
+// exports.orderCancellationPath = async ( req, res ) => {
+//   const orderId = req.params.orderId;
+//   const productId = req.params.productId;
+//   try{
+//       const dbOrder = await orderModel.findById(orderId).populate('products.productId');
+//       const orderProduct = dbOrder.products.find( item => item.productId._id.toString() === productId )
+//       if(!orderProduct) return res.status(400).json({ error: 'Product not found'});
+      
+//       let user = await userModel.findById(dbOrder.userId);
+//       if(!user) return res.status(404).json({ error: 'user not found, login again'});
+
+//       if(dbOrder.paymentMethod !== 'COD'){
+//           user.wallet.amount += parseInt(orderProduct.productTotalPrice);
+//           await user.save();
+//           const product = await productModel.findById(productId);
+//           product.quantity += orderProduct.quantity;
+//           product.save();
+//       }
+//       const index = dbOrder.products.findIndex( product => product.productId._id.toString() === productId );
+//       dbOrder.products[index].orderStatus = false;
+//       dbOrder.products[index].orderValid = false;
+//       dbOrder.products[index].returned = false;
+//       await dbOrder.save();
+//       return res.status(200).json({ success: true, message: 'order cancelled'});
+//   }catch(err){
+//       console.error(err);
+//       return res.status(500).json({ error: 'Internal server error' });
+//   }
+// }
+
 exports.orderReturnPatch = async (req, res) => {
     const orderId = req.params.orderId;
     const productId = req.params.productId;
@@ -79,8 +111,7 @@ exports.orderReturnPatch = async (req, res) => {
       }
   
      
-        // user.wallet.amount += dbOrder.totalPrice;
-        // await user.save();
+       
   
       product.returned = true;
       product.orderStatus = false;

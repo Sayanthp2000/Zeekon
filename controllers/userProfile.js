@@ -280,9 +280,8 @@ exports.genInvoice = async ( req, res ) => {
     let y = doc.y + 20;
     doc.font('Helvetica-Bold').text('No', 60, y)
         .text('product', 100, y)
-        .text('Quantity', 220, y)
-        .text('Price', 275, y)
-        .text('Discount Price',350,y)
+        .text('Quantity', 250, y)
+        .text('Price', 350, y)
         .text('Total', 500, y);
   
     generateHr(doc, doc.y + 10);
@@ -293,8 +292,7 @@ exports.genInvoice = async ( req, res ) => {
         
         doc.font('Helvetica').text(`${index + 1}`, 60, y)
         .text(`${item.productId.name}`, 100, y)
-        .text(`${item.quantity}`, 220, y)
-        .text(`${item.productId.price}`, 275, y)
+        .text(`${item.quantity}`, 250, y)
         .text(`${item.productId.discountPrice}`, 350, y)
         .text(`${item.productTotalPrice}`, 500, y);
   
@@ -304,19 +302,24 @@ exports.genInvoice = async ( req, res ) => {
     generateHr(doc, doc.y + 10);
     y+= 20;
      
-    order.products.forEach(( item, index ) => {
-    doc.font('Helvetica').text(`subTotal : ${ item.productTotalPrice }`, 450, y );
-  });
-    // doc.font('Helvetica').text(`Delivery : ${ 0 }`, 450, y + 20 );
+  //   order.products.forEach(( item, index ) => {
+  //   doc.font('Helvetica').text(`subTotal : ${ item.productTotalPrice }`, 450, y );
+  // });
+  doc.font('Helvetica').text(`subTotal : ${ order.totalPrice }`, 450, y );
+
+    doc.font('Helvetica').text(`Delivery : ${ 0 }`, 450, y + 20 );
+
     doc.moveDown();
   
     doc.strokeColor("#aaaaaa").lineWidth(1).moveTo(450, doc.y).lineTo(550, doc.y).stroke();
     
     doc.moveDown();
-    order.products.forEach(( item, index ) => {
-      doc.font('Helvetica-Bold').text(`subTotal : ${ item.productTotalPrice }`);
-    })
-  
+    // order.products.forEach(( item, index ) => {
+    //   doc.font('Helvetica-Bold').text(`subTotal : ${ item.productTotalPrice }`);
+    // })
+
+     doc.font('Helvetica-Bold').text(`subTotal : ${ order.totalPrice }`);
+
     return;
   };
   

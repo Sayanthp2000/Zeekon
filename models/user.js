@@ -90,7 +90,14 @@ var userSchema = new Schema({
         status: {
             type: Boolean,
             default: true,
-        }},
+        },
+        walletHistory: [{
+            amount: { type: Number, required: true },
+            balance: { type: Number, required: true },
+            transactionType: { type: String, enum: ['credit', 'debit'], default: 'credit' },
+            createdAt: { type: Date, default: Date.now }
+          }]
+        },
     created_at: {
         type: Date
     },
@@ -102,17 +109,32 @@ var userSchema = new Schema({
 
 }); 
 
-// userSchema.pre('save', async function (next) {
-//     if (this.isModified('password')) {
-//       this.password = await bcrypt.hash(this.password, 10);
-//     }
-//     next();
-//   });
+   userSchema.pre('save', async function (next) {
+    const user = this;
+    console.log(user.isNew);
+    if (user.isNew) return next();
+    
+    try {
+      const prevUser = await userModel.findById(user._id).select('wallet.amount');
+      console.log(prevUser);
+      console.log(user.isModified('wallet.amount'));
+      if (user.isModified('wallet.amount')) {
+        const previousAmount = prevUser.wallet.amount || 0;
+        const newAmount = user.wallet.amount;
+        const transactionType = newAmount > previousAmount ? 'credit' : 'debit';
+        const amount = Math.abs(newAmount - previousAmount);
+        const balance = newAmount;
   
-//   // Compare the provided password with the hashed password
-//   userSchema.methods.comparePassword = async function (password) {
-//     return await bcrypt.compare(password, this.password);
-//   };
+        const walletHistory = { amount, balance, transactionType, createdAt: new Date() };
+        user.wallet.walletHistory.push(walletHistory);
+        user.wallet.modifiedAt = new Date();
+      }
+      next();
+    } catch (error) {
+      next(error);
+    }
+  });
+
 
 const userModel = mongoose.model('Users', userSchema );
 module.exports = userModel;

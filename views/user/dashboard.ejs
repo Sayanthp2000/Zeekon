@@ -69,8 +69,8 @@
 												<label>Email *</label>
 												<input type="email" class="form-control" value="<%= user.email %>" name="email" >
 
-												<label>Referal Code </label>
-												<input type="text" class="form-control" value="<%= user.referalCode %>" name="referal_code" >
+												<!-- <label>Referal Code </label>
+												<input type="text" class="form-control" value="<%= user.referalCode %>" name="referal_code" > -->
 
 												<hr>
 
@@ -118,13 +118,14 @@
 															<hr>
 														<% } ) %>
 													</div>
-													<% order.products.forEach(( product ) => { %>
-
-														<div class="order-items flex-grow-1" style="width: 25%;"> ₹<%= product.productTotalPrice %></div>
-														
-														<%}) %>
+													
+													<div class="order-items flex-grow-1" style="width: 25%;">₹<%= order.totalPrice %></div>
 													<div class="order-items flex-grow-1" style="width: 25%;"><%= order.orderMessage %></div>
-													<div class="order-items flex-grow-1" style="width: 25%;"><%= order.paymentMethod %></div>
+													<% if(order.paymentMethod === "Pending"){ %>
+														<div class="order-items flex-grow-1" style="width: 25%;">Razorpay</div>
+													<% }else { %>
+														<div class="order-items flex-grow-1" style="width: 25%;"><%= order.paymentMethod %></div>
+													<% } %>
 												</div>
 												
 											<%}) %>
@@ -322,7 +323,7 @@
 
 									<!-- < } %> -->
 
-									<div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
+									<!-- <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
 										<div class="border p-5">
 											<h6 class="color-c96" >Wallet</h6>
 											<hr>
@@ -332,7 +333,44 @@
 												<button class="btn btn-primary btn-wallet" data-user-id="<%= user._id %>">Add money</button>
 											</div>
 										</div>
+									</div> -->
+
+									<div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
+										<div class="border p-5">
+											<h6 class="color-c96" >Wallet</h6>
+											<hr>
+											<p>Balance : <b>₹<%= (user.wallet)? user.wallet.amount : 0 %></b></p>
+											<div class="wallet-div">
+												<input type="number" name="wallet-amount" id="wallet-amount" placeholder="Enter an amount" class="px-3" >
+												<button class="btn btn-primary btn-wallet" data-user-id="<%= user._id %>">Add money</button>
+											</div>
+										</div>
+										<div class="my-5">
+											<h4>Wallet History</h4>
+											<div class="row border py-3 color-c96">
+											  <div class="col"><b>Date</b></div>
+											  <div class="col"><b>Amount</b></div>
+											  <div class="col"><b>Balance</b></div>
+											  <div class="col"><b>TransactionalType</b></div>
+											</div>
+												<% if(user.wallet?.walletHistory) { %>
+												<% len = user.wallet.walletHistory.length %>
+											
+												<% for( let i = 0; i < len; i++ ) { %>
+													<% item = user.wallet.walletHistory[(len - 1) - i] %>
+											  <div class="row border py-3">
+												<div class="col"><%= item.createdAt.toLocaleDateString() %></div>
+												<div class="col">₹<%= item.amount %></div>
+												<div class="col">₹<%= item.balance %></div>
+												<div class="col"><%= item.transactionType %></div>
+											  </div>
+											<% } %>
+											<% } %>
+										</div>
 									</div>
+									
+
+								
 
 								</div>
 	                		</div><!-- End .col-lg-9 -->

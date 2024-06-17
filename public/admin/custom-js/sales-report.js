@@ -1,33 +1,52 @@
-
 let fromDate = document.querySelector('#from-date');
 let toDate = document.querySelector('#to-date');
-
 
 function findReportType() {
     const reportType = document.querySelector('#report-type');
     return reportType.value;
 }
 
+function validateDates() {
+    const fromDateValue = new Date(fromDate.value);
+    const toDateValue = new Date(toDate.value);
+    const today = new Date();
 
+    if (fromDateValue > toDateValue) {
+        failureMessage('From date cannot be after To date.');
+        return false;
+    }
 
+    if (fromDateValue > today || toDateValue > today) {
+        failureMessage('Dates cannot be in the future.');
+        return false;
+    }
 
+    return true;
+}
 
 const filterButton = document.querySelector('.btn-apply');
 filterButton.addEventListener('click', async (event) => {
+    if ((fromDate.value && !toDate.value) || (!fromDate.value && toDate.value)) {
+        return failureMessage('Both From and To dates must be selected.');
+    }
 
-    if((fromDate.value && !toDate.value) || (!fromDate.value && toDate.value)) return failureMessage('error no date.');
     const reportType = findReportType();
-    if((!fromDate.value || !toDate.value) && reportType === 'custom' ) return failureMessage('No Date selected, or change filter Type');
-    
+    if ((!fromDate.value || !toDate.value) && reportType === 'custom') {
+        return failureMessage('No Date selected, or change filter Type.');
+    }
+
+    if (!validateDates()) {
+        return;
+    }
+
     // Construct the URL with query parameters
     const url = `/admin/sales-report/${reportType}?fromDate=${fromDate.value}&toDate=${toDate.value}`;
 
     const response = await fetch(url);
     const body = await response.json();
-    if(body.error){
+    if (body.error) {
         failureMessage(body.error);
-    }else {
-
+    } else {
         document.querySelector('.noOfOrders').innerHTML = body.data.noOfOrders;
         document.querySelector('.revenueAmount').innerHTML = body.data.revenueAmount;
         document.querySelector('.noOfUsers').innerHTML = body.data.noOfUsers;
@@ -42,39 +61,43 @@ filterButton.addEventListener('click', async (event) => {
     }
 });
 
-
-
 const generateReportButton = document.querySelector('#generate-pdf');
 generateReportButton.addEventListener('click', async (event) => {
     const reportType = findReportType();
-    if(reportType === 'custom' && (!fromDate.value || !toDate.value )) return failureMessage('select date if or change custom');
+    if (reportType === 'custom' && (!fromDate.value || !toDate.value)) {
+        return failureMessage('Select date if custom or change filter type.');
+    }
+
+    if (!validateDates()) {
+        return;
+    }
 
     const response = await fetch(`/admin/sales/pdf/${reportType}?fromDate=${fromDate.value}&toDate=${toDate.value}`);
 
     if (response.ok) {
         const blob = await response.blob();
-
         const url = window.URL.createObjectURL(blob);
-
         const a = document.createElement('a');
         a.href = url;
         a.download = `sales-report${Date.now()}.pdf`;
         document.body.appendChild(a);
-
         a.click();
-
         document.body.removeChild(a);
     } else {
         console.error('Failed to generate PDF:', response.status, response.statusText);
     }
 });
 
-
-
 const generateExcelButton = document.querySelector('#generate-excel');
 generateExcelButton.addEventListener('click', async (event) => {
     const reportType = findReportType();
-    if(reportType === 'custom' && (!fromDate.value || !toDate.value )) return failureMessage('select date if or change custom');
+    if (reportType === 'custom' && (!fromDate.value || !toDate.value)) {
+        return failureMessage('Select date if custom or change filter type.');
+    }
+
+    if (!validateDates()) {
+        return;
+    }
 
     const response = await fetch(`/admin/sales/excel/${reportType}?fromDate=${fromDate.value}&toDate=${toDate.value}`);
 
@@ -88,12 +111,9 @@ generateExcelButton.addEventListener('click', async (event) => {
         a.click();
         document.body.removeChild(a);
     } else {
-      console.error('Failed to generate Excel:', response.status, response.statusText);
+        console.error('Failed to generate Excel:', response.status, response.statusText);
     }
 });
-
-
-
 
 document.addEventListener('DOMContentLoaded', async (event) => {
     const response = await fetch('/admin/sales-report-total');
@@ -111,138 +131,106 @@ document.addEventListener('DOMContentLoaded', async (event) => {
     displayOrderStatusSummary(body.data.orderStatus, orderStatusDiv);
 });
 
-
 function topProductsSale(products, productsDiv) {
-
     productsDiv.innerHTML = `<h3> Top Product Sale <h3>`;
-
-    const productsContainerDiv = document.createElement('div'); // Create a container div to hold all product divs
+    const productsContainerDiv = document.createElement('div');
     productsContainerDiv.classList.add('products-container');
-
-    for (let i = 0; i < products.length; i++) {// Loop through each product
-        let productDiv = document.createElement('div'); // Create a div for each product
+    for (let i = 0; i < products.length; i++) {
+        let productDiv = document.createElement('div');
         productDiv.classList.add('product-item');
-
-        let pName = document.createElement('p'); // Create paragraph elements for product name and count
+        let pName = document.createElement('p');
         pName.innerHTML = products[i].productName;
         let pCount = document.createElement('p');
         pCount.innerHTML = products[i].count;
-
-        productDiv.appendChild(pName); // Append paragraph elements to the product div
+        productDiv.appendChild(pName);
         productDiv.appendChild(pCount);
-
-        productsContainerDiv.appendChild(productDiv); // Append the product div to the container div
+        productsContainerDiv.appendChild(productDiv);
     }
-
-    productsDiv.appendChild(productsContainerDiv); // Append the container div to the specified productsDiv
+    productsDiv.appendChild(productsContainerDiv);
 }
 
-
 function topCategoriesSale(categories, categoryDiv) {
-
     categoryDiv.innerHTML = `<h3> Top Category Sale <h3>`;
-
-    const categoryContainerDiv = document.createElement('div'); // Create a container div to hold all category divs
+    const categoryContainerDiv = document.createElement('div');
     categoryContainerDiv.classList.add('category-container');
-
-    for (let i = 0; i < categories.length; i++) {// Loop through each category
-        let categoryItemDiv = document.createElement('div'); // Create a div for each category
+    for (let i = 0; i < categories.length; i++) {
+        let categoryItemDiv = document.createElement('div');
         categoryItemDiv.classList.add('category-item');
-
-        let categoryName = document.createElement('p'); // Create paragraph elements for category name and count
+        let categoryName = document.createElement('p');
         categoryName.classList.add('category-name');
         categoryName.innerHTML = categories[i].categoryName;
         let categoryCount = document.createElement('p');
         categoryCount.innerHTML = categories[i].count;
         categoryCount.classList.add('category-count');
-
-        categoryItemDiv.appendChild(categoryName); // Append paragraph elements to the category div
+        categoryItemDiv.appendChild(categoryName);
         categoryItemDiv.appendChild(categoryCount);
-
-        categoryContainerDiv.appendChild(categoryItemDiv); // Append the category div to the container div
+        categoryContainerDiv.appendChild(categoryItemDiv);
     }
-
-    // Check if categoryDiv exists before appending the container div
     if (categoryDiv) {
-        categoryDiv.appendChild(categoryContainerDiv); // Append the container div to the specified categoryDiv
+        categoryDiv.appendChild(categoryContainerDiv);
     }
 }
 
-
-function topPaymentOptions(paymentMethods, paymentMethodsDiv ){
-
+function topPaymentOptions(paymentMethods, paymentMethodsDiv) {
     paymentMethodsDiv.innerHTML = `<h3> Top Payment Options <h3>`;
-
-    const paymentContainerDiv = document.createElement('div'); // Create a container div to hold all payment method divs
+    const paymentContainerDiv = document.createElement('div');
     paymentContainerDiv.classList.add('payment-container');
-
-    for( let i = 0; i < paymentMethods.length; i++ ) {
-        let paymentItemDiv = document.createElement('div'); // Create a div for each payment method
+    for (let i = 0; i < paymentMethods.length; i++) {
+        let paymentItemDiv = document.createElement('div');
         paymentItemDiv.classList.add('payment-item');
-
-        let paymentMethodName = document.createElement('p'); // Create paragraph elements for payment method name and count
+        let paymentMethodName = document.createElement('p');
         paymentMethodName.innerHTML = paymentMethods[i]._id;
         let paymentMethodCount = document.createElement('p');
         paymentMethodCount.innerHTML = paymentMethods[i].count;
-
-        paymentItemDiv.appendChild(paymentMethodName); // Append paragraph elements to the payment method div (corrected variable name)
+        paymentItemDiv.appendChild(paymentMethodName);
         paymentItemDiv.appendChild(paymentMethodCount);
-
-        paymentContainerDiv.appendChild(paymentItemDiv); // Append the payment method div to the container div
+        paymentContainerDiv.appendChild(paymentItemDiv);
     }
     paymentMethodsDiv.appendChild(paymentContainerDiv);
 }
 
-
 function displayOrderStatusSummary(orderStatusSummary, orderStatusDiv) {
-
     orderStatusDiv.innerHTML = `<h3> Order Statuses <h3>`;
-
-    const orderStatusContainerDiv = document.createElement('div'); // Create a container div to hold all order status divs
+    const orderStatusContainerDiv = document.createElement('div');
     orderStatusContainerDiv.classList.add('order-status-container');
-
     for (let i = 0; i < orderStatusSummary.length; i++) {
-        let statusItemDiv = document.createElement('div'); // Create a div for each order status
+        let statusItemDiv = document.createElement('div');
         statusItemDiv.classList.add('status-item');
-
-        let statusName = document.createElement('p'); // Create paragraph elements for status name and count
+        let statusName = document.createElement('p');
         statusName.innerHTML = orderStatusSummary[i]._id;
         let statusCount = document.createElement('p');
         statusCount.innerHTML = orderStatusSummary[i].count;
-
-        statusItemDiv.appendChild(statusName); // Append paragraph elements to the status div
+        statusItemDiv.appendChild(statusName);
         statusItemDiv.appendChild(statusCount);
-
-        orderStatusContainerDiv.appendChild(statusItemDiv); // Append the status div to the container div
+        orderStatusContainerDiv.appendChild(statusItemDiv);
     }
-
-    orderStatusDiv.appendChild(orderStatusContainerDiv); // Append the container div to the specified orderStatusDiv
+    orderStatusDiv.appendChild(orderStatusContainerDiv);
 }
-
-
-
 
 function successMessage(message) {
     Swal.fire({
-      text: message,
-      position: 'top',
-      timer: 2000,
-      background: 'green',
-      color: 'white',
-      showConfirmButton: false
+        text: message,
+        position: 'top',
+        timer: 2000,
+        background: 'green',
+        color: 'white',
+        showConfirmButton: false,
+        toast: true,
+        timerProgressBar: true,
+        showCloseButton: true
     });
-    return;
-  }
-  
-  
-  function failureMessage(message) {
+}
+
+function failureMessage(message) {
     Swal.fire({
-      text: message,
-      position: 'top',
-      timer: 2000,
-      background: 'red',
-      color: 'white',
-      showConfirmButton: false
+        text: message,
+        position: 'top',
+        timer: 3000,
+        background: 'red',
+        color: 'white',
+        showConfirmButton: false,
+        toast: true,
+        timerProgressBar: true,
+        showCloseButton: true
     });
-    return;
-  }
+}

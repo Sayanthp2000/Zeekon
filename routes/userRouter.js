@@ -6,7 +6,7 @@ const checkoutController = require('../controllers/userCheckout');
 const wishlistController = require('../controllers/userWishlist');
 const orderController = require('../controllers/userOrder');
 const userAuth = require('../middlewares/authUser');
-
+const google = require('../middlewares/passport')
 
 
 
@@ -95,20 +95,12 @@ router.post('/payment-pending', orderController.paymentPendingPost )
 
 
 const passport = require('passport'); 
-require('../middlewares/passport');
-router.use(passport.initialize());
-router.use(passport.session());  
 
 
-router.get('/google/Verify', passport.authenticate('google',{
-    scope:['email','profile']
-}));
-router.get('/userVerification/google/callback' ,
-passport.authenticate('google',{
-    successRedirect: '/',
-    failureRedirect: '/login'
-}));
+//google login
 
+router.get('/google/Verify',google.googleauth)
+router.get('/google/callback',google.goog);
 
 
 

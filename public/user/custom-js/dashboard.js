@@ -86,87 +86,79 @@ deleteBtn.forEach( button => {
   const editButtons = document.querySelectorAll('.btn-edit');
   const tabPanes = document.querySelectorAll('.tab-pane');
   const editLink = document.querySelector('[edit-link]');
-  const editAddressForm = document.querySelector('[address-edit]');
+  const editAddress = document.querySelector('[address-edit]');
 
-  editButtons.forEach(button => {
-    button.addEventListener('click', async () => {
+     
+
+editButtons.forEach(button => {
+  button.addEventListener('click', async (event) => {
       try {
-        const addressId = button.getAttribute('data-address-id');
-        console.log(`Editing address with ID: ${addressId}`);
+          const addressId = button.getAttribute('data-address-id');
+          const index = button.getAttribute('data-index');
+          
+          const confi = await confirmIt('Are you sure you want to edit this address?', 'Edit');
+          if (!confi.isConfirmed) return;
 
-        const confi = await confirmIt('Are you sure you want to edit this address?', 'Edit');
-        if (!confi.isConfirmed) return;
+          tabPanes.forEach( item => item.classList.remove('show', 'active'));
+          editDiv.classList.add('show', 'active');
+          navLinks.forEach( item => item.classList.remove('active'));
+          editLink.setAttribute('aria-selected', 'true');
+          editLink.classList.add('active')
 
-        tabPanes.forEach(item => item.classList.remove('show', 'active'));
-        editDiv.classList.add('show', 'active');
-        navLinks.forEach(item => item.classList.remove('active'));
-        editLink.setAttribute('aria-selected', 'true');
-        editLink.classList.add('active');
-
-        const response = await fetch(`/address/edit/${addressId}`);
-        const body = await response.json();
-
-        console.log('Response from server:', body);
-
-        if (body.error) {
-          return failureMessage(body.error);
-        }
-
-        for (const key in body) {
-          if (body.hasOwnProperty(key)) {
-            const value = body[key];
-            const inputElement = document.getElementById(key);
-            if (inputElement) {
-              inputElement.value = value;
-            }
+          const response = await fetch(`/address/edit/${addressId}`);
+          
+          // Parse JSON response
+          const body = await response.json();
+          for (const key in body) {
+              if (body.hasOwnProperty(key)) {
+                  const value = body[key];
+                  const inputElement = document.getElementById(key);
+                  if (inputElement) {
+                      inputElement.value = value;
+                  }
+              }
           }
-        }
-        const landmark = document.querySelector('#landmark');
-        landmark.value = body.landmark;
+          const landmark = document.querySelector('#landmark');
+          landmark.value = body.landmark;
+
+          editAddress.addEventListener('submit', async (event) => {
+              event.preventDefault();
+              try{
+                  const formData = {};
+                  const userId = event.target.dataset.userId;
+
+                  for (const input of event.target.elements) {
+                      if (input.tagName !== 'INPUT' || !input.name) {
+                          continue;
+                      }
+                      formData[input.name] = input.value;
+                  }
+                  formData[landmark.name] = landmark.value;
+              
+                      const responseUpdate = await fetch(`/address/update/${addressId}/${userId}`, {
+                          method: 'PATCH',
+                          headers: {
+                              'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify(formData)
+                      })
+                      const bodyupdate = await responseUpdate.json()
+                      if(bodyupdate.error){
+                          return failureMessage(bodyupdate.error);
+                      }
+                      if(bodyupdate.success){
+                          successMessage(bodyupdate.message);
+                          setTimeout(() => window.location.href = '/dashboard', 1000);
+                      }
+              }catch(err){
+                  console.log(err);
+              }
+          })
+
       } catch (err) {
-        console.log(err);
+          console.log(err);
       }
-    });
   });
-
-  editAddressForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    try {
-        const formData = {};
-        const userId = event.target.dataset.userId;
-        const addressId = event.target.dataset.addressId;
-        console.log('userId:', userId);
-        console.log('addressId:', addressId);
-
-        const landmark = document.querySelector('#landmark');
-        for (const input of event.target.elements) {
-            if (input.tagName !== 'INPUT' || !input.name) continue;
-            formData[input.name] = input.value;
-        }
-        formData[landmark.name] = landmark.value;
-
-        console.log('formData:', formData);
-
-        const responseUpdate = await fetch(`/address/update/${addressId}/${userId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        const bodyUpdate = await responseUpdate.json();
-        console.log('Update response from server:', bodyUpdate);
-
-        if (bodyUpdate.error) {
-            return failureMessage(bodyUpdate.error);
-        } else if (bodyUpdate.success) {
-            successMessage(bodyUpdate.message);
-            setTimeout(() => window.location.href = '/dashboard', 1000);
-        }
-    } catch (err) {
-        console.log(err);
-    }
 });
 
 
