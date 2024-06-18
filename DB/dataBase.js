@@ -1,6 +1,6 @@
 const Mongoose = require("mongoose");
 
-const connctDB = Mongoose.connect("mongodb+srv://psaya1852:YX9b5LjbbuT0Uhed@zeekon.ab4en1l.mongodb.net/?retryWrites=true&w=majority&appName=Zeekon");
+const connctDB = Mongoose.connect("mongodb+srv://psaya1852:YX9b5LjbbuT0Uhed@zeekon.ab4en1l.mongodb.net/Zeekon?retryWrites=true&w=majority&appName=Zeekon");
 
 connctDB
     .then(()=> console.log("Database connected"))
