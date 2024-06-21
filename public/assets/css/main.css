@@ -1704,7 +1704,6 @@ label {
 }
 
 .hero-slider-1.style-2 .hero-slider-content-2 {
-  padding-left: 300px;
   padding-top: 100px;
 }
 
@@ -1964,6 +1963,16 @@ label {
 
 .home-slide-cover .hero-slider-content-2 {
   padding-left: 50px;
+}
+
+.home-slider .single-hero-slider {
+  height: 600px; /* Adjust as needed */
+}
+
+.home-slider img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /*Carausel*/
