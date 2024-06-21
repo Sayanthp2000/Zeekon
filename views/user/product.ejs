@@ -37,6 +37,7 @@
                         <div class="product-detail accordion-detail">
                             <div class="row mb-50">
                                 <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
                                     <div class="detail-gallery">
                                         <span class="zoom-icon"><i class="fi-rs-search"></i></span>
                                         <!-- MAIN SLIDES -->
@@ -59,12 +60,14 @@
                                             <% product.images.forEach( (item, index ) => { %>
                                                 
                                                 <a class="product-gallery-item active" href="#" data-image="/user/assets/images/products/single/1.jpg" >
-                                                    <img  src="/products/<%= item %>" >
+                                                    <img style="height: 181 px; width: 121 px;" src="/products/<%= item %>" >
                                                 </a>
                                                 
                                             <% }); %>
                                         </div>
                                     </div>
+                                    <!-- End Gallery -->
+                                </div>
                                     <!-- End Gallery -->
                                 </div>
                                 <div class="col-md-6 col-sm-12 col-xs-12">
@@ -77,7 +80,7 @@
                                           
                                         </div>
                                        
-                                        <div class="product-price primary-color float-left">
+                                        <div class="product-price primary-color float-left" style="font-size: 28px; font-weight: 800; color: #088178;">
                                             <% if( product.actualPrice === product.discountPrice){ %>
                                                 ₹<%= product.actualPrice %>
                                             <% }else { %> 
