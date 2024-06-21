@@ -51,7 +51,7 @@ const PDFDocument = require('pdfkit');
       }
     }
 
-    const referalCodeMessage = `If a user Register with this code you will get Rs 100`
+    const referalCodeMessage = `If a user Register with this code you will get Rs 50`
     res.render('dashboard.ejs', { userIn: req.session.userIn, user, orders, referalCodeMessage });
   
   };
@@ -228,23 +228,6 @@ exports.addressUpdatePatch = async (req, res) => {
 }
 
 
-
-// exports.addWalletAmount = async ( req, res ) => {
-//     const userId = req.params.userId;
-//     const amount = req.params.amount;
-//     try{
-//         if(!userId) return res.status(403).json({ error: 'user not found, login again' });
-//         if(!amount) return res.status(403).json({ error: 'Please enter an amount' });
-//         const user = await userModel.findById(userId);
-//         if(!user.wallet.amount) user.wallet.amount = 0;
-//         user.wallet.amount += parseInt(amount);
-//         await user.save();
-//         return res.status(200).json({ success: true, message: `${amount}Rs added to wallet` });
-//     }catch(error){
-//         console.log(error);
-//         return res.status(500).json({ error: 'Internal server error' });
-//     }
-//   }
 
 exports.addWalletAmount = async (req, res) => {
   const userId = req.params.userId;
