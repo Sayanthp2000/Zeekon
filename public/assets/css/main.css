@@ -1965,15 +1965,7 @@ label {
   padding-left: 50px;
 }
 
-.home-slider .single-hero-slider {
-  height: 600px; /* Adjust as needed */
-}
 
-.home-slider img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 
 /*Carausel*/
 .carausel-6-columns-cover .carausel-6-columns {
