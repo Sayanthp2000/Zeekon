@@ -1664,11 +1664,11 @@ label {
 }
 
 .hero-slider-1 {
-  height: 500px;
+  height: 600px;
 }
 
 .hero-slider-1 img {
-  max-height: 500px;
+  max-height: 700px;
 }
 
 .hero-slider-1 .single-slider-img-1 {
@@ -1955,7 +1955,7 @@ label {
 
 .home-slide-cover {
   position: relative;
-  padding: 0 30px;
+  padding: 0px;
 }
 
 .home-slide-cover .slider-arrow {

@@ -32,11 +32,10 @@ exports.userSignupGet = ( req, res ) => {
 
         console.log('enter in to validatesignupbody');
 
-        const body = { username, email, password, passwordRe } = req.body;
+        const body = { username, email, password, passwordRe ,referalCode } = req.body;
         req.session.userEmail = email;
         req.session.signupBody = body;
-        console.log(req.session);
-        console.log(req.body);
+       
 
         const isEmailValid = (email) => {
         const emailRegex =  /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/g
@@ -45,17 +44,17 @@ exports.userSignupGet = ( req, res ) => {
 
 
         if(!username || !email || !password || !passwordRe ){
-        console.log('error 1');
+       
         return res.status(400).json({ error: 'All fields are required'});
         }
 
         if(!isEmailValid(email)){
-        console.log('error 2');
+      
         return res.status(400).json({ error: 'email structure is not right'});
         }
         
         if(password !== passwordRe){
-        console.log('error 3');
+      
         return res.status(400).json({ error: 'password is not matching'});
         }
         
@@ -65,7 +64,7 @@ exports.userSignupGet = ( req, res ) => {
         return res.status(400).json({ error: 'email is already registered'});
         }
 
-        console.log('validateSingupbody is finished');
+       
         res.json({ message: 'validation is alright'});
     }
 
@@ -171,36 +170,77 @@ exports.userSignupGet = ( req, res ) => {
 
 
 
-    exports.userSignupPost = async (req, res, next) => {
-      try {
-          const { username, email, password } = req.session.signupBody;
-  
-          if (!username || !email || !password) {
-              console.error('All fields are required');
-              return res.status(400).json({ error: 'All fields are required' });
-          }
-  
-          // Hash the password
-          const hashedPassword = await bcrypt.hash(password, 10);
-          
-          // Create user data object
-          const userData = { username, email, password: hashedPassword };
-          
-          // Save user to the database
-          const result = await userModel.create(userData);
-          console.log('User created:', result);
-  
-          // Redirect to login page after successful signup
-          res.redirect('/login');
-      } catch (error) {
-          console.error('Signup error:', error);
-          res.status(500).json({ error: 'Internal server error' });
+exports.userSignupPost = async (req, res, next) => {
+  try {
+    const { username, email, password, referalCode } = req.session.signupBody;
+
+    if (!username || !email || !password) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user data object
+    const userData = { username, email, password: hashedPassword };
+
+    // Save user to the database
+    const newUser = await userModel.create(userData);
+
+    if (referalCode) {
+      // Find the referrer user
+      const referrerUser = await userModel.findOne({ referalCode });
+
+      if (referrerUser) {
+        // Update the referrer's wallet amount
+        const referrerWalletAmount = referrerUser.wallet.amount + 50;
+        const referrerWalletHistory = {
+          amount: 50,
+          balance: referrerWalletAmount,
+          transactionType: 'credit',
+          description: 'Received ₹50 for referral',
+          createdAt: new Date()
+        };
+        referrerUser.wallet.amount = referrerWalletAmount;
+        referrerUser.wallet.walletHistory.push(referrerWalletHistory);
+        await referrerUser.save();
+
+        // Update the new user's wallet amount
+        const newUserWalletAmount = newUser.wallet.amount + 50;
+        const newUserWalletHistory = {
+          amount: 50,
+          balance: newUserWalletAmount,
+          transactionType: 'credit',
+          description: 'Received ₹50 for signing up with referral code',
+          createdAt: new Date()
+        };
+        newUser.wallet.amount = newUserWalletAmount;
+        newUser.wallet.walletHistory.push(newUserWalletHistory);
+        await newUser.save();
       }
-      next();
-  };
+    }
+
+    // Redirect to login page after successful signup
+    res.redirect('/login');
+  } catch (error) {
+    console.error('Signup error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+  next();
+};
 
 
-
+  
+  exports.checkReferalcode = async ( req, res ) => {
+    const referalCode = req.params.referalCode;
+    try{
+        const findReferalCode = await userModel.findOne({ referalCode: referalCode });
+        if(findReferalCode) return res.json({ success: true, message: 'Referal code is valid'});
+        else return res.json({ success: false, message: "can't find the referal code, try again."});
+    }catch(err){
+        console.log('Error on checkReferalcode : ' + err )
+    }
+}
 
     exports.redirecToOtp = ( req, res) => {
         res.redirect('/signup/otp');

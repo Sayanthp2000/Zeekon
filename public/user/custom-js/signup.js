@@ -5,21 +5,15 @@ const msgPara = document.querySelector('.msg-para');
 form.addEventListener('submit', async (event) => {
    try{
     event.preventDefault();
-    console.log('form submit');
-
     const body = getUserDetails();
     const validateResult = verifyUserDetails(body)
-    console.log('validateReult : ' + validateResult);
-    console.log('body : ' + body );
-
+    
     if(validateResult.success){
         const result = await shareBody(body);
-        console.log('result : ' + result );
+        
         if(result.success){
             window.location.href = '/signup/otp';
         }
-    }else {
-        console.log('validateResult.message : ' + validateResult.message );
     }
    }
    catch(err){
@@ -35,8 +29,9 @@ const getUserDetails = () => {
     const email = document.querySelector('[email]').value;
     const password = document.querySelector('[password]').value;
     const passwordRe = document.querySelector('[passwordRe]').value;
+    const referalCode = (document.querySelector('[referalCode]').value || null);
 
-    return body = { username, email, password, passwordRe }
+    return body = { username, email, password, passwordRe,referalCode }
 }
 
 
@@ -66,7 +61,26 @@ const verifyUserDetails = (body) => {
     return { success: true };
 }
 
+const referalButton = document.querySelector('.referal-button');
+referalButton.addEventListener('click', async (event) => {
+    event.preventDefault();
+    const referalCode = document.querySelector('[referalCode]').value;
+    if( !referalCode || referalCode === '') displayReferalStatus('type referal code')
+    const response = await fetch(`/check-referal/${referalCode}`);
+    const body = await response.json();
+    if(!body.success){
+        displayReferalStatus(body.message, body.error ? 'green' : 'red');
+    }else if(body.success){
+        displayReferalStatus(body.message, body.success ? 'green' : 'red');
+    }
+})
 
+const referalStatus = document.querySelector('.referal-status');
+const displayReferalStatus = (message, color) => {
+    referalStatus.style.fontSize = '15px';
+    referalStatus.style.color = color;
+    referalStatus.innerHTML = message;
+}
 
 const displayError = (result) => {
     msgPara.parentElement.className = 'msg-box-error';

@@ -34,88 +34,285 @@ exports.checkoutGet = async (req, res) => {
 
 
 
+// exports.checkoutPost = async (req, res) => {
+//     try {
+//       const user = await userModel.findById(req.session.user._id);
+//       if(!user) return res.status(400).json({ error: 'User not found, Login again'});
+//     //   if(typeof Number(req.body.pincode) !== 'number' ) return res.status(400).json({ error: 'pincode must be number'});
+
+//       console.log(req.body)
+
+//       const address = { name, email, phone, pincode, state, country, altphone, city, landmark } = req.body;
+
+//       const validationResult = validateAddress( name, email, phone, pincode, state, country, altphone, city, landmark);
+//       if(!validationResult.success) {
+//         return res.status(400).json({ success: false, error: validationResult.message, hai: 'hai' });
+//       }
+  
+//       const productDetails = await getProductDetails(user.cart);
+  
+//       let totalPrice = 0;
+//       productDetails.forEach((item, index) => {
+//         const itemPrice = item.product ? (item.product.price || 1) : 0;
+//         const itemdiscountPrice = item.product ? (item.product.discountPrice || 1) : 0;
+//         totalPrice += itemPrice * item.count;
+//         discountPrice = itemdiscountPrice * item.count;
+//       });
+//       let originalPrice = totalPrice;
+//       if(req.body.discountPrice) totalPrice -= req.body.discountPrice;
+//       console.log('.discountPrice : ' + req.body.discountPrice, 'totalPrice : ' + totalPrice );
+
+//       if(totalPrice > 1000 && req.body.paymentMethod === 'COD' ) return res.status(400).json({ success: false, error: 'Cash On Delivery is not available for products more than 1000Rs'});
+//       if(totalPrice < 500 ) totalPrice += parseInt(process.env.DELIVERY_CHARGE);
+  
+//       const products = [];
+//       for (const item of productDetails) {
+//         const dbProduct = await productModel.findById(item.product._id);
+//         if (dbProduct.quantity < item.count) {
+//             continue;
+//         }
+//         dbProduct.quantity -= item.count;
+//         await dbProduct.save();
+//         let deliveryCharge = 0;
+//            console.log(totalPrice);
+//         if( totalPrice <= 500 )  deliveryCharge = (process.env.DELIVERY_CHARGE)*1;
+
+//         products.push({
+//           productId: item.product._id,
+//           quantity: item.count,
+//           productTotalPrice: (item.product.discountPrice * item.count) + parseInt(deliveryCharge)
+          
+//         });
+//       }
+  
+//       if (!user) return res.status(400).json({ error: 'login again, session expired' });
+//       if(req.body.paymentMethod === "wallet"){
+//         if( user.wallet.amount < totalPrice ) return res.status(400).json({ error: `balance in wallet : ${user.wallet.amount}` });
+//         user.wallet.amount -= totalPrice;
+//       }
+  
+//       const order = await new orderModel({
+//         userId: req.session.user._id,
+//         products,
+//         address,
+//         orderNotes: req.body.ordernotes,
+//         originalPrice,
+//         totalPrice,
+//         paymentMethod: req.body.paymentMethod || 'COD',
+//         couponUsed: req.body.couponCode || '',
+//         status: "Processing",
+//         orderValid: true,
+//         rzr_orderId: req.body.orderId
+//       });
+  
+//       const savedOrder = await order.save();
+//       if (savedOrder) {
+//         user.cart = [];
+//         await user.save();
+//         if (req.body.couponCode) await couponModel.updateOne({ couponCode: req.body.couponCode }, { $push: { usedUsers: user._id } });
+//         return res.json({ success: true, message: 'Order created successfully' });
+//       }
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+
+// exports.checkoutPost = async (req, res) => {
+//   try {
+//     const user = await userModel.findById(req.session.user._id);
+//     if (!user) return res.status(400).json({ error: 'User not found, Login again' });
+
+//     const { name, email, phone, pincode, state, country, altphone, city, landmark } = req.body;
+//     const address = { name, email, phone, pincode, state, country, altphone, city, landmark };
+
+//     const validationResult = validateAddress(name, email, phone, pincode, state, country, altphone, city, landmark);
+//     if (!validationResult.success) {
+//       return res.status(400).json({ success: false, error: validationResult.message });
+//     }
+
+//     const productDetails = await getProductDetails(user.cart);
+
+//     let totalPrice = 0;
+//     productDetails.forEach((item) => {
+//       const itemPrice = item.product ? (item.product.price || 1) : 0;
+//       const itemdiscountPrice = item.product ? (item.product.discountPrice || 1) : 0;
+//       totalPrice += itemPrice * item.count;
+//     });
+
+//     let originalPrice = totalPrice;
+//     if (req.body.discountPrice) totalPrice -= req.body.discountPrice;
+//     if (totalPrice > 1000 && req.body.paymentMethod === 'COD') {
+//       return res.status(400).json({ success: false, error: 'Cash On Delivery is not available for products more than 1000Rs' });
+//     }
+//     if (totalPrice < 500) totalPrice += parseInt(process.env.DELIVERY_CHARGE);
+
+//     const products = [];
+//     for (const item of productDetails) {
+//       const dbProduct = await productModel.findById(item.product._id);
+//       if (dbProduct.quantity < item.count) {
+//         continue;
+//       }
+//       dbProduct.quantity -= item.count;
+//       await dbProduct.save();
+//       let deliveryCharge = 0;
+//       if (totalPrice <= 500) deliveryCharge = parseInt(process.env.DELIVERY_CHARGE);
+
+//       products.push({
+//         productId: item.product._id,
+//         quantity: item.count,
+//         productTotalPrice: (item.product.discountPrice * item.count) + deliveryCharge
+//       });
+//     }
+
+//     if (req.body.paymentMethod === "wallet") {
+//       if (user.wallet.amount < totalPrice) {
+//         return res.status(400).json({ error: `Insufficient balance in wallet: ₹${user.wallet.amount}` });
+//       }
+
+//       // Deduct the total price from the user's wallet
+//       const newWalletAmount = user.wallet.amount - totalPrice;
+
+//       // Create a wallet history entry
+//       const walletHistoryEntry = {
+//         amount: totalPrice,
+//         balance: newWalletAmount,
+//         transactionType: 'debit',
+//         description: `Payment for order`,
+//         createdAt: new Date()
+//       };
+
+//       // Update the user's wallet
+//       user.wallet.amount = newWalletAmount;
+//       user.wallet.walletHistory.push(walletHistoryEntry);
+//     }
+
+//     const order = new orderModel({
+//       userId: req.session.user._id,
+//       products,
+//       address,
+//       orderNotes: req.body.ordernotes,
+//       originalPrice,
+//       totalPrice,
+//       paymentMethod: req.body.paymentMethod || 'COD',
+//       couponUsed: req.body.couponCode || '',
+//       status: "Processing",
+//       orderValid: true,
+//       rzr_orderId: req.body.orderId
+//     });
+
+//     const savedOrder = await order.save();
+//     if (savedOrder) {
+//       user.cart = [];
+//       await user.save();
+//       if (req.body.couponCode) {
+//         await couponModel.updateOne({ couponCode: req.body.couponCode }, { $push: { usedUsers: user._id } });
+//       }
+//       return res.json({ success: true, message: 'Order created successfully' });
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     return res.status(500).json({ error: 'Internal server error' });
+//   }
+// };
+
 exports.checkoutPost = async (req, res) => {
-    try {
+  try {
       const user = await userModel.findById(req.session.user._id);
-      if(!user) return res.status(400).json({ error: 'User not found, Login again'});
-    //   if(typeof Number(req.body.pincode) !== 'number' ) return res.status(400).json({ error: 'pincode must be number'});
+      if (!user) return res.status(400).json({ error: 'User not found, Login again' });
 
-      console.log(req.body)
+      const { name, email, phone, pincode, state, country, altphone, city, landmark } = req.body;
+      const address = { name, email, phone, pincode, state, country, altphone, city, landmark };
 
-      const address = { name, email, phone, pincode, state, country, altphone, city, landmark } = req.body;
-
-      const validationResult = validateAddress( name, email, phone, pincode, state, country, altphone, city, landmark);
-      if(!validationResult.success) {
-        return res.status(400).json({ success: false, error: validationResult.message, hai: 'hai' });
+      const validationResult = validateAddress(name, email, phone, pincode, state, country, altphone, city, landmark);
+      if (!validationResult.success) {
+          return res.status(400).json({ success: false, error: validationResult.message });
       }
-  
-      const productDetails = await getProductDetails(user.cart);
-  
-      let totalPrice = 0;
-      productDetails.forEach((item, index) => {
-        const itemPrice = item.product ? (item.product.price || 1) : 0;
-        const itemdiscountPrice = item.product ? (item.product.discountPrice || 1) : 0;
-        totalPrice += itemPrice * item.count;
-        discountPrice = itemdiscountPrice * item.count;
-      });
-      let originalPrice = totalPrice;
-      if(req.body.discountPrice) totalPrice -= req.body.discountPrice;
-      console.log('.discountPrice : ' + req.body.discountPrice, 'totalPrice : ' + totalPrice );
 
-      if(totalPrice > 1000 && req.body.paymentMethod === 'COD' ) return res.status(400).json({ success: false, error: 'Cash On Delivery is not available for products more than 1000Rs'});
-      if(totalPrice < 500 ) totalPrice += parseInt(process.env.DELIVERY_CHARGE);
-  
+      const productDetails = await getProductDetails(user.cart);
+
+      let totalPrice = 0;
+      productDetails.forEach((item) => {
+          const itemPrice = item.product ? (item.product.price || 1) : 0;
+          const itemdiscountPrice = item.product ? (item.product.discountPrice || 1) : 0;
+          totalPrice += itemdiscountPrice * item.count;
+      });
+
+      let originalPrice = totalPrice;
+      if (req.body.discountPrice) totalPrice -= req.body.discountPrice;
+
+      if (totalPrice > 1000 && req.body.paymentMethod === 'COD') {
+          return res.status(400).json({ success: false, error: 'Cash On Delivery is not available for products more than 1000Rs' });
+      }
+      if (totalPrice < 500) totalPrice += parseInt(process.env.DELIVERY_CHARGE);
+
       const products = [];
       for (const item of productDetails) {
-        const dbProduct = await productModel.findById(item.product._id);
-        if (dbProduct.quantity < item.count) {
-            continue;
-        }
-        dbProduct.quantity -= item.count;
-        await dbProduct.save();
-        let deliveryCharge = 0;
-           console.log(totalPrice);
-        if( totalPrice <= 500 )  deliveryCharge = (process.env.DELIVERY_CHARGE)*1;
+          const dbProduct = await productModel.findById(item.product._id);
+          if (dbProduct.quantity < item.count) {
+              continue;
+          }
+          dbProduct.quantity -= item.count;
+          await dbProduct.save();
+          let deliveryCharge = 0;
+          if (totalPrice <= 500) deliveryCharge = parseInt(process.env.DELIVERY_CHARGE);
 
-        products.push({
-          productId: item.product._id,
-          quantity: item.count,
-          productTotalPrice: (item.product.discountPrice * item.count) + parseInt(deliveryCharge)
-          
-        });
+          products.push({
+              productId: item.product._id,
+              quantity: item.count,
+              productTotalPrice: (item.product.discountPrice * item.count) + deliveryCharge
+          });
       }
-  
-      if (!user) return res.status(400).json({ error: 'login again, session expired' });
-      if(req.body.paymentMethod === "wallet"){
-        if( user.wallet.amount < totalPrice ) return res.status(400).json({ error: `balance in wallet : ${user.wallet.amount}` });
-        user.wallet.amount -= totalPrice;
+
+      if (req.body.paymentMethod === "wallet") {
+          if (user.wallet.amount < totalPrice) {
+              return res.status(400).json({ error: `Insufficient balance in wallet: ₹${user.wallet.amount}` });
+          }
+
+          // Deduct the total price from the user's wallet
+          const newWalletAmount = user.wallet.amount - totalPrice;
+
+          // Create a wallet history entry
+          const walletHistoryEntry = {
+              amount: totalPrice,
+              balance: newWalletAmount,
+              transactionType: 'debit',
+              description: `Payment for order`,
+              createdAt: new Date()
+          };
+
+          // Update the user's wallet
+          user.wallet.amount = newWalletAmount;
+          user.wallet.walletHistory.push(walletHistoryEntry);
       }
-  
-      const order = await new orderModel({
-        userId: req.session.user._id,
-        products,
-        address,
-        orderNotes: req.body.ordernotes,
-        originalPrice,
-        totalPrice,
-        paymentMethod: req.body.paymentMethod || 'COD',
-        couponUsed: req.body.couponCode || '',
-        status: "Processing",
-        orderValid: true,
-        rzr_orderId: req.body.orderId
+
+      const order = new orderModel({
+          userId: req.session.user._id,
+          products,
+          address,
+          orderNotes: req.body.ordernotes,
+          originalPrice,
+          totalPrice,
+          paymentMethod: req.body.paymentMethod || 'COD',
+          couponUsed: req.body.couponCode || '',
+          status: "Processing",
+          orderValid: true,
+          rzr_orderId: req.body.orderId
       });
-  
+
       const savedOrder = await order.save();
       if (savedOrder) {
-        user.cart = [];
-        await user.save();
-        if (req.body.couponCode) await couponModel.updateOne({ couponCode: req.body.couponCode }, { $push: { usedUsers: user._id } });
-        return res.json({ success: true, message: 'Order created successfully' });
+          user.cart = [];
+          await user.save();
+          if (req.body.couponCode) {
+              await couponModel.updateOne({ couponCode: req.body.couponCode }, { $push: { usedUsers: user._id } });
+          }
+          return res.json({ success: true, message: 'Order created successfully' });
       }
-    } catch (err) {
+  } catch (err) {
       console.error(err);
-    }
-  };
+      return res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 
 

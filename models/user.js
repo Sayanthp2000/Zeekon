@@ -95,6 +95,7 @@ var userSchema = new Schema({
             amount: { type: Number, required: true },
             balance: { type: Number, required: true },
             transactionType: { type: String, enum: ['credit', 'debit'], default: 'credit' },
+            description: { type: String }, 
             createdAt: { type: Date, default: Date.now }
           }]
         },
@@ -105,6 +106,18 @@ var userSchema = new Schema({
         type: Boolean,
         default: true
     },
+    referalCode: {
+        type: String,
+        unique: true,
+        default: null,
+        set: function (value) {
+          if (!value || value === "") {
+            return this.value;
+          } else {
+            return value;
+          }
+        }
+      }
    
 
 }); 
@@ -126,7 +139,7 @@ var userSchema = new Schema({
         const balance = newAmount;
   
         const walletHistory = { amount, balance, transactionType, createdAt: new Date() };
-        user.wallet.walletHistory.push(walletHistory);
+        // user.wallet.walletHistory.push(walletHistory);
         user.wallet.modifiedAt = new Date();
       }
       next();

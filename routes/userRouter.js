@@ -21,10 +21,10 @@ router.get('/', userController.userHomeGet );
 // Signup page
 router.get('/signup', userController.userSignupGet );
 router.post('/signup', userController.validateSignupBody );
-
 router.get('/signup/otp', userController.sendOtp, userController.signupOtpGet );
 router.post('/signup/otp/validate', userController.signupOtpPost );
 router.get('/post-user', userController.userSignupPost );
+router.get('/check-referal/:referalCode', userController.checkReferalcode );
 
 // Login
 router.get('/login', userAuth.userSessionYes ,userController.loginGet );

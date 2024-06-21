@@ -4,3 +4,33 @@
     padding: 10px 20px;
     font-weight: bold;
 }
+
+.details-box {
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.product-details-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.product-details-list li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.product-details-list li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #3BB77E;
+}
+
+.product-details-list li:last-child {
+    margin-bottom: 0;
+}

@@ -28,6 +28,9 @@
                 <div class="card-body">
                     <h4 class="card-title mb-4">Sign Up</h4>
                     <form action="/signup" method="post" id="signup-form">
+                        <div class="mb-3 msg-box">
+                            <p class="msg-para"></p>
+                        </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Username:</label>
                             <input class="form-control" type="text" placeholder="Your name" name="name" id="name" username>
@@ -45,12 +48,22 @@
                             <label for="confirmPassword" class="form-label">Confirm Password:</label>
                             <input class="form-control" type="password" placeholder="Password again" name="PasswordRe" id="confirmPassword" passwordRe >
                         </div>
+                        <div class="mb-3 referal-code">
+                            <label for="referal_code" class="referal-status form-label">Referal Code : </label>
+                            <div class="referal-code-div">
+                                <input type="text" class="form-control"   placeholder="Referal code if any" name="referal_code" referalCode >
+                                    <button class="referal-button">Check</button>
+                            </div>
+                            
+                        </div>
                         <div class="login-link form-child">
                             <p><a href="/login">Already have an Account? Login</a></p>
                         </div>
                         <div class="button-div form-child">
                             <button type="submit" class="btn btn-primary w-100" id="submit-button">Submit</button>
                         </div>
+                       
+
                     </form>
                 </div>
             </div>

@@ -36,7 +36,9 @@ const PDFDocument = require('pdfkit');
         }
       }
   
-      if (isArriving) {
+      if(order.pending) {
+        order.orderMessage = "Pending"
+      } else if (isArriving) {
         order.orderMessage = 'Arriving';
       } else if (isDelivered) {
         order.orderMessage = 'Delivered';
@@ -48,8 +50,10 @@ const PDFDocument = require('pdfkit');
         order.orderMessage = '...';
       }
     }
+
+    const referalCodeMessage = `If a user Register with this code you will get Rs 100`
+    res.render('dashboard.ejs', { userIn: req.session.userIn, user, orders, referalCodeMessage });
   
-    res.render('dashboard.ejs', { userIn: req.session.userIn, user, orders });
   };
 
 
@@ -83,7 +87,7 @@ const PDFDocument = require('pdfkit');
             const passwordMatch = await bcrypt.compare( oldpassword, req.session.user.password );
             if(!passwordMatch) return res.status(400).json({ error: 'password is wrong'});
 
-            const hashedPassword = await bcrypt.hash( password , parseInt(process.env.SALTROUNDS ));
+            const hashedPassword = await bcrypt.hash( password , 10);
             const result = await userModel.findOneAndUpdate({ email: userSessionEmail }, { $set: { username, password: hashedPassword, referalCode: referal_code }}, { new: true } );
             console.log(result);
             req.session.user.username = username;
@@ -225,22 +229,56 @@ exports.addressUpdatePatch = async (req, res) => {
 
 
 
-exports.addWalletAmount = async ( req, res ) => {
-    const userId = req.params.userId;
-    const amount = req.params.amount;
-    try{
-        if(!userId) return res.status(403).json({ error: 'user not found, login again' });
-        if(!amount) return res.status(403).json({ error: 'Please enter an amount' });
-        const user = await userModel.findById(userId);
-        if(!user.wallet.amount) user.wallet.amount = 0;
-        user.wallet.amount += parseInt(amount);
-        await user.save();
-        return res.status(200).json({ success: true, message: `${amount}Rs added to wallet` });
-    }catch(error){
-        console.log(error);
-        return res.status(500).json({ error: 'Internal server error' });
-    }
+// exports.addWalletAmount = async ( req, res ) => {
+//     const userId = req.params.userId;
+//     const amount = req.params.amount;
+//     try{
+//         if(!userId) return res.status(403).json({ error: 'user not found, login again' });
+//         if(!amount) return res.status(403).json({ error: 'Please enter an amount' });
+//         const user = await userModel.findById(userId);
+//         if(!user.wallet.amount) user.wallet.amount = 0;
+//         user.wallet.amount += parseInt(amount);
+//         await user.save();
+//         return res.status(200).json({ success: true, message: `${amount}Rs added to wallet` });
+//     }catch(error){
+//         console.log(error);
+//         return res.status(500).json({ error: 'Internal server error' });
+//     }
+//   }
+
+exports.addWalletAmount = async (req, res) => {
+  const userId = req.params.userId;
+  const amount = parseInt(req.params.amount, 10); // Ensure the amount is an integer
+  try {
+      if (!userId) return res.status(403).json({ error: 'User not found, login again' });
+      if (!amount) return res.status(403).json({ error: 'Please enter an amount' });
+
+      const user = await userModel.findById(userId);
+      if (!user.wallet.amount) user.wallet.amount = 0;
+
+      const newWalletAmount = user.wallet.amount + amount;
+
+      // Create a wallet history entry
+      const walletHistoryEntry = {
+          amount,
+          balance: newWalletAmount,
+          transactionType: 'credit',
+          description: `Added ₹${amount} to wallet`,
+          createdAt: new Date()
+      };
+
+      // Update the user's wallet
+      user.wallet.amount = newWalletAmount;
+      user.wallet.walletHistory.push(walletHistoryEntry);
+      await user.save();
+
+      return res.status(200).json({ success: true, message: `${amount}Rs added to wallet` });
+  } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: 'Internal server error' });
   }
+}
+
 
 
 
