@@ -44,12 +44,14 @@
     max-width: 100%;
     margin: 0 auto; /* Center the images */
     display: block;
+    object-fit: cover;
 }
 
 .detail-gallery figure {
     margin: 0; /* Remove default margin */
     padding: 0; /* Remove default padding */
     width: 100%;
+    background-color: transparent;
 }
 
 .slider-nav-thumbnails .img-thumbnail {
@@ -71,5 +73,9 @@
     .slider-nav-thumbnails .img-thumbnail {
         width: 80px; /* Adjust thumbnail size for smaller screens */
     }
+}
+
+.detail-gallery {
+    background-color: transparent;
 }
 
