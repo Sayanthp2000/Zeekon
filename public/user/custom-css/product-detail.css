@@ -34,3 +34,42 @@
 .product-details-list li:last-child {
     margin-bottom: 0;
 }
+
+
+
+/* product-detail.css */
+.detail-gallery .img-fluid {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    margin: 0 auto; /* Center the images */
+    display: block;
+}
+
+.detail-gallery figure {
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    width: 100%;
+}
+
+.slider-nav-thumbnails .img-thumbnail {
+    width: 100px; /* Set a fixed width for thumbnails */
+    height: auto;
+    object-fit: cover; /* Ensure the image fits within the thumbnail without distortion */
+}
+
+.slider-nav-thumbnails a {
+    display: inline-block; /* Ensure the anchor tags containing thumbnails are displayed inline */
+    margin: 0 5px; /* Add some spacing between thumbnails */
+}
+
+@media (max-width: 768px) {
+    .detail-gallery .img-fluid {
+        max-width: 100%;
+    }
+
+    .slider-nav-thumbnails .img-thumbnail {
+        width: 80px; /* Adjust thumbnail size for smaller screens */
+    }
+}
+
