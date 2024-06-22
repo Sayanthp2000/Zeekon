@@ -345,18 +345,18 @@
 												<div class="col"><b>Amount</b></div>
 												<div class="col"><b>Balance</b></div>
 												<div class="col"><b>TransactionalType</b></div>
-												<div class="col"><b>Description</b></div> <!-- New Description Column -->
+												<div class="col"><b>Description</b></div>
 											</div>
 											<% if(user.wallet?.walletHistory) { %>
 												<% len = user.wallet.walletHistory.length %>
 												<% for(let i = 0; i < len; i++) { %>
 													<% item = user.wallet.walletHistory[(len - 1) - i] %>
 													<div class="row border py-3">
-														<div class="col"><%= item.createdAt.toLocaleDateString() %></div>
+														<div class="col"><%= item.createdAt.toLocaleDateString('en-GB') %></div>
 														<div class="col">₹<%= item.amount %></div>
 														<div class="col">₹<%= item.balance %></div>
 														<div class="col"><%= item.transactionType %></div>
-														<div class="col"><%= item.description %></div> <!-- Display Description -->
+														<div class="col"><%= item.description %></div> 
 													</div>
 												<% } %>
 											<% } %>
