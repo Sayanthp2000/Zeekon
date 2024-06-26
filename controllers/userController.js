@@ -390,7 +390,7 @@ exports.forgotPassword = async (req, res) => {
 exports.getResetPasswordForm = (req, res) => {
     const email = req.query.email;
     const successMessage = req.query.success ? decodeURIComponent(req.query.success) : undefined;
-    res.render('reset-password', { email, successMessage });
+    res.render('reset-password',  { email, successMessage });
   };
 
 // Handle reset password request

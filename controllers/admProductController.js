@@ -39,7 +39,7 @@ exports.productListEditPatch =  async ( req, res ) => {
 
 
 exports.getProducts = async ( req, res ) => {
-    const products = await productModel.find({}).sort({ create_at: -1, modified_at: -1 }).populate('category');
+    const products = await productModel.find({prize: {$lt:200}}).sort({ create_at: -1, modified_at: -1 }).populate('category');
     const categories = await categoryModel.find({});
     // console.log(products)
     res.render('admin-products', { products, categories });
